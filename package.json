@@ -1,0 +1,24 @@
+{
+  "name": "election-2016-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SYU88/election-2016-service.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SYU88/election-2016-service/issues"
+  },
+  "homepage": "https://github.com/SYU88/election-2016-service#readme",
+  "dependencies": {
+    "express": "^4.13.4",
+    "google-spreadsheet": "^2.0.1",
+    "sequelize": "^3.21.0"
+  }
+}
