@@ -5,7 +5,7 @@ var async = require('async'),
 
 module.exports = {
   getJson: function(req, res) {
-    var url = process.env.AP_URL + '&officeID=Z&officeID=P&officeID=H';
+    var url = process.env.AP_URL + '&officeID=Z&officeID=P&officeID=H&officeID=Y';
     
     rp(url).then(function(body){
       body = JSON.parse(body);
@@ -13,7 +13,12 @@ module.exports = {
 
       res.send(processedData);
     }).catch(function(err){
+      console.log(err);
+      module.exports.getFromDataBase(req, res);
       log.info(err);
     });
+  },
+  getFromDataBase: function(req, res) {
+
   }
 };

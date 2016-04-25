@@ -14,6 +14,22 @@ module.exports = {
         };
       });
     });
-    return formattedData;
+    return formattedData.filter(module.exports.isRelevant);
+  },
+  isRelevant: function(formattedObject) {
+    if(formattedObject[0].officeName === 'U.S. House' && formattedObject[0].seatName === 'District 17') {
+      return true;
+    } else if(formattedObject[0].officeName === 'State Senate') {
+        if(formattedObject[0].seatName === 'District 3' || formattedObject[0].seatName === 'District 9' || 
+          formattedObject[0].seatName === 'District 11' || formattedObject[0].seatName === 'District 15') {
+          return true;
+        }
+    } else if(formattedObject[0].officeName === 'State Assembly') {
+      if(formattedObject[0].seatName === 'District 4' || formattedObject[0].seatName === 'District 14' || 
+        formattedObject[0].seatName === 'District 16' || formattedObject[0].seatName === 'District 24' || formattedObject[0].seatName === 'District 27') {
+        return true;
+      }
+    }
+    return false;
   }
 };
