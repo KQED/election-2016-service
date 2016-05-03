@@ -18,7 +18,7 @@ module.exports = {
     });
   },
   getFromDataBase: function(req, res) {
-    models.APResults.findAll().then(function(results) {
+    models.APresults.findAll().then(function(results) {
       var data = [];
       results.forEach(function(result) {
         if(result.dataValues.winner === 'X') {

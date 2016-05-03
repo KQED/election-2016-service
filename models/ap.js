@@ -2,7 +2,7 @@
 
 module.exports = function(sequelize, DataTypes) {
 
-  var APResults = sequelize.define('APResults', {
+  var APresults = sequelize.define('APresults', {
     officename: DataTypes.STRING,
     seatname: DataTypes.STRING,
     lastupdated: DataTypes.STRING,
@@ -13,7 +13,7 @@ module.exports = function(sequelize, DataTypes) {
     winner: DataTypes.STRING
   });
 
-  APResults.removeAttribute('id');
+  APresults.removeAttribute('id');
 
-  return APResults;
+  return APresults;
 }
