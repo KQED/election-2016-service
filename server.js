@@ -3,7 +3,7 @@ var express = require('express'),
     log = require('./server/logging/bunyan'),
     googleHandler = require('./server/handlers/googleHandler'),
     apHandler = require('./server/handlers/apHandler');
-    // models = require("./models");
+    models = require('./models');
 
 app.get('/googleDoc', googleHandler.getRows);
 
@@ -14,10 +14,10 @@ var PORT = process.env.PORT || 8000;
 
 
 
-// models.sequelize.sync().then(function () {
+models.sequelize.sync().then(function () {
   var server = app.listen(PORT, function(){
 
     log.info('Server listening on port ' + PORT);
 
   });
-// });
+});

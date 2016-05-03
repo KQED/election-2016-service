@@ -3,7 +3,14 @@ var path      = require('path');
 var Sequelize = require('sequelize');
 var env       = process.env.NODE_ENV || 'development';
 var config    = require('../config.json')[env];
-var sequelize = new Sequelize(config.database, config.username, config.password, config);
+var sequelize = new Sequelize(process.env.ELECTIONS_DB_DB, process.env.ELECTIONS_DB_USER, process.env.ELECTIONS_DB_PASS, {
+  host: process.env.ELECTIONS_DB_HOST,
+  port: process.env.ELECTIONS_DB_PORT,
+  dialect: 'mysql',
+  define: {
+    timestamps: false,
+  }
+});
 var db        = {};
 
 fs
