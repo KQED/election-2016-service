@@ -1,5 +1,4 @@
-var async = require('async'),
-    rp = require('request-promise'),
+var rp = require('request-promise'),
     log = require('../logging/bunyan'),
     processData = require('../utils/processData');
     models = require('../../models');
