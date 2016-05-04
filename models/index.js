@@ -5,10 +5,7 @@ var env       = process.env.NODE_ENV || 'development';
 var sequelize = new Sequelize(process.env.ELECTIONS_DB_DB, process.env.ELECTIONS_DB_USER, process.env.ELECTIONS_DB_PASS, {
   host: process.env.ELECTIONS_DB_HOST,
   port: process.env.ELECTIONS_DB_PORT,
-  dialect: 'mysql',
-  define: {
-    timestamps: false,
-  }
+  dialect: 'mysql'
 });
 var db        = {};
 

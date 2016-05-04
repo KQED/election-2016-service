@@ -16,4 +16,4 @@ module.exports = function(sequelize, DataTypes) {
   APresults.removeAttribute('id');
 
   return APresults;
-}
+};
