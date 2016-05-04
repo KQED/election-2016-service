@@ -2,6 +2,8 @@ var express = require('express'),
     app = express(),
     erc = require('express-redis-cache'),
     uuid = require('node-uuid'),
+    cors = require('cors'),
+    cors_options = {origin: '*'},
     environment = process.env.NODE_ENV || 'local',
     redisConfig = require('./server/utils/redisConfig'),
     cache_prefix = process.env.CACHE_PREFIX || redisConfig.cache[environment].prefix || uuid.v1().substring(0,6),
@@ -31,6 +33,8 @@ cache.on('message', function(message){
 cache.on('error', function(error){
     log.error("cache", error);
 });
+
+app.use(cors(cors_options));
 
 app.get('/googleDoc', cache.route(), googleHandler.getRows);
 
