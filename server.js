@@ -32,9 +32,9 @@ cache.on('error', function(error){
     log.error("cache", error);
 });
 
-app.get('/googleDoc', googleHandler.getRows);
+app.get('/googleDoc', cache.route(), googleHandler.getRows);
 
-app.get('/ap', apHandler.getJson);
+app.get('/ap', cache.route(), apHandler.getJson);
 
 var PORT = process.env.PORT || 8000;
 

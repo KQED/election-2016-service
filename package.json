@@ -17,7 +17,6 @@
   },
   "homepage": "https://github.com/SYU88/election-2016-service#readme",
   "dependencies": {
-    "async": "^1.5.2",
     "bunyan": "^1.8.1",
     "express": "^4.13.4",
     "express-redis-cache": "^0.3.0",
