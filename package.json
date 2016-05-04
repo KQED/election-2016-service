@@ -23,6 +23,7 @@
     "express-redis-cache": "^0.3.0",
     "google-spreadsheet": "^2.0.1",
     "mysql": "^2.10.2",
+    "node-uuid": "^1.4.7",
     "request-promise": "^3.0.0",
     "sequelize": "^3.21.0"
   }
