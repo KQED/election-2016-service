@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = function(sequelize, DataTypes) {
-  var SecStateResults = sequelize.define('SecStateResults', {
+  var SOSresults = sequelize.define('SOSresults', {
     officename: DataTypes.STRING,
     seatname: DataTypes.STRING,
     lastupdated: DataTypes.STRING,
@@ -12,5 +12,5 @@ module.exports = function(sequelize, DataTypes) {
     winner: DataTypes.STRING
   });
 
-  return SecStateResults;
+  return SOSresults;
 }
