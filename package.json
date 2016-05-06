@@ -17,13 +17,15 @@
   },
   "homepage": "https://github.com/SYU88/election-2016-service#readme",
   "dependencies": {
-    "async": "^1.5.2",
     "bunyan": "^1.8.1",
+    "cors": "^2.7.1",
     "express": "^4.13.4",
     "express-redis-cache": "^0.3.0",
     "google-spreadsheet": "^2.0.1",
     "mysql": "^2.10.2",
+    "node-uuid": "^1.4.7",
     "request-promise": "^3.0.0",
-    "sequelize": "^3.21.0"
+    "sequelize": "^3.21.0",
+    "xml2js": "^0.4.16"
   }
 }

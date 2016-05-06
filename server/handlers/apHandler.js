@@ -1,7 +1,6 @@
-var async = require('async'),
-    rp = require('request-promise'),
+var rp = require('request-promise'),
     log = require('../logging/bunyan'),
-    processData = require('../utils/processData');
+    processData = require('../utils/processData'),
     models = require('../../models');
 
 module.exports = {
@@ -12,13 +11,15 @@ module.exports = {
       var processedData = processData.processAp(body);
       res.send(processedData);
     }).catch(function(err){
-      console.log(err);
       module.exports.getFromDataBase(req, res);
       log.info(err);
     });
   },
   getFromDataBase: function(req, res) {
-    models.APResults.findAll().then(function(results) {
+    models.APresults.findAll({
+      order: 'createdAt DESC',
+      limit: 25
+    }).then(function(results) {
       var data = [];
       results.forEach(function(result) {
         if(result.dataValues.winner === 'X') {

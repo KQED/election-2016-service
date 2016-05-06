@@ -9,6 +9,7 @@ module.exports = {
           precincts: raceObject.reportingUnits[0].precinctsReportingPct,
           firstname: candidate.first,
           lastname: candidate.last,
+          party: candidate.party,
           votecount: candidate.voteCount,
           winner: candidate.winner ? true : false
         };
