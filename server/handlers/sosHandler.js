@@ -12,6 +12,7 @@ module.exports = {
     var convertedResults = {};
     convertedResults.candidates = [];
     convertedResults.validVotes = [];
+    convertedResults.party = [];
     convertedResults.issueDate = '';
     convertedResults.precintsReporting = '';
     convertedResults.totalPrecints = '';
@@ -30,11 +31,13 @@ module.exports = {
           reportingUnit.Selection.forEach(function(selection) {
             convertedResults.candidates.push(selection.Candidate[0].CandidateFullName[0].PersonFullName[0]);
             convertedResults.validVotes.push(selection.ValidVotes[0]);
+            convertedResults.party.push(selection.AffiliationIdentifier[0].RegisteredName[0]);
           });
         }
       });
     });
     return convertedResults;
+    // console.log(convertedResults);
   },
   getDatafromAPI: function(req, res) {
     var url = process.env.AP_URL + '&officeID=Z&officeID=P&officeID=H&officeID=Y';
@@ -43,7 +46,6 @@ module.exports = {
       // var processedData = processData.processAp(body);
       res.send(module.exports.convertXML());
     }).catch(function(err){
-      console.log(err);
       module.exports.getFromDataBase(req, res);
       log.info(err);
     });
