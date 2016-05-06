@@ -4,15 +4,15 @@ var express = require('express'),
     uuid = require('node-uuid'),
     cors = require('cors'),
     cors_options = {origin: '*'},
-    environment = process.env.NODE_ENV || 'local',
+    environment = process.env.NODE_ENV || 'development',
     redisConfig = require('./server/utils/redisConfig'),
     cache_prefix = process.env.CACHE_PREFIX || redisConfig.cache[environment].prefix || uuid.v1().substring(0,6),
     redis_opts = redisConfig.cache[environment] || {},
     log = require('./server/logging/bunyan'),
     googleHandler = require('./server/handlers/googleHandler'),
-    apHandler = require('./server/handlers/apHandler');
+    apHandler = require('./server/handlers/apHandler'),
+    sosHandler = require('./server/handlers/sosHandler'),
     models = require('./models');
-
 
 log.info("cache_prefix:", cache_prefix);
 
@@ -39,6 +39,8 @@ app.use(cors(cors_options));
 app.get('/googleDoc', cache.route(), googleHandler.getRows);
 
 app.get('/ap', cache.route(), apHandler.getJson);
+
+app.get('/sos', sosHandler.getDatafromAPI);
 
 var PORT = process.env.PORT || 8000;
 

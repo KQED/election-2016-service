@@ -1,6 +1,6 @@
 var rp = require('request-promise'),
     log = require('../logging/bunyan'),
-    processData = require('../utils/processData');
+    processData = require('../utils/processData'),
     models = require('../../models');
 
 module.exports = {
