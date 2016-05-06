@@ -11,7 +11,6 @@ module.exports = {
       var processedData = processData.processAp(body);
       res.send(processedData);
     }).catch(function(err){
-      console.log(err);
       module.exports.getFromDataBase(req, res);
       log.info(err);
     });
