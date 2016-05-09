@@ -3,7 +3,7 @@ var GoogleSpreadsheet = require('google-spreadsheet');
 module.exports = {
   getRows: function(req, res) {
     var sheet;
-    var doc = new GoogleSpreadsheet('1uWrizFwKc5seKCqgQWjgieQFjgM_6rGiFimJl6cXFps');
+    var doc = new GoogleSpreadsheet(process.env.GOOGLE_DOCS_KEY);
     doc.getInfo(function(err, info){
       sheet = info.worksheets[0];
       sheet.getCells({

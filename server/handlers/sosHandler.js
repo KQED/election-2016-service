@@ -10,8 +10,10 @@ module.exports = {
     var xml = fs.readFileSync('server/handlers/X14GG510_0200v7.xml', 'ascii');
     var parser = new xml2js.Parser();
     var convertedResults = {};
+    convertedResults.contestName = '';
     convertedResults.candidates = [];
     convertedResults.validVotes = [];
+    convertedResults.percentVotes = [];
     convertedResults.party = [];
     convertedResults.issueDate = '';
     convertedResults.precintsReporting = '';
@@ -21,7 +23,7 @@ module.exports = {
       XMLresults = data["EML"]["Count"][0]["Election"][0]["Contests"][0]["Contest"][0];
       json = JSON.stringify(XMLresults);
       results = JSON.parse(json);
-      contestName = results.ContestIdentifier[0].ContestName;
+      convertedResults.contestName = results.ContestIdentifier[0].ContestName;
       reportingUnitVotes = results.ReportingUnitVotes;
       reportingUnitVotes.forEach(function(reportingUnit) {
         var reportingUnitIdentifier = reportingUnit.ReportingUnitIdentifier[0]._;
@@ -31,13 +33,13 @@ module.exports = {
           reportingUnit.Selection.forEach(function(selection) {
             convertedResults.candidates.push(selection.Candidate[0].CandidateFullName[0].PersonFullName[0]);
             convertedResults.validVotes.push(selection.ValidVotes[0]);
+            convertedResults.percentVotes.push(selection.CountMetric[0]._);
             convertedResults.party.push(selection.AffiliationIdentifier[0].RegisteredName[0]);
           });
         }
       });
     });
     return convertedResults;
-    // console.log(convertedResults);
   },
   getDatafromAPI: function(req, res) {
     var url = process.env.AP_URL + '&officeID=Z&officeID=P&officeID=H&officeID=Y';
@@ -45,23 +47,19 @@ module.exports = {
       // body = JSON.parse(body);
       // var processedData = processData.processAp(body);
       res.send(module.exports.convertXML());
+      // module.exports.getFromDataBase(req, res);
     }).catch(function(err){
       module.exports.getFromDataBase(req, res);
       log.info(err);
     });
   },
   getFromDataBase: function(req, res) {
-    models.APresults.findAll({
+    models.SOSresults.findAll({
       order: 'createdAt DESC',
       limit: 25
     }).then(function(results) {
       var data = [];
       results.forEach(function(result) {
-        if(result.dataValues.winner === 'X') {
-          result.dataValues.winner = true;
-        } else {
-          result.dataValues.winner = false;
-        }
         data.push(result.dataValues);
       });
       res.send(data);
