@@ -20,6 +20,7 @@ $ export ELECTIONS_DB_PORT='YOUR_MYSQL_PORT'
 $ export NODE_ENV='production' | 'development'
 $ export CACHE_PREFIX='YOUR_CACHE_PREFIX'
 ```
+Note: This service is programmed to use a database named 'election2016'.
 
 ##Installation
 ```
