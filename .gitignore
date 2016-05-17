@@ -2,3 +2,6 @@ node_modules/
 exports.sh
 Archive.zip
 dump.rdb
+SOSresults.zip
+SOSresults/
+npm-debug.log
