@@ -8,7 +8,8 @@ var rp = require('request-promise'),
 
 module.exports = {
 
-  downloadZip: function(req, res) {
+  getSOSresults: function(req, res) {
+    //download zip file from SOS
     var options = {
       method : "GET",
       uri: 'http://cms.cdn.sos.ca.gov/media/16PP/X16PPv7.zip',
@@ -18,16 +19,18 @@ module.exports = {
     rp(options)
       .pipe(fs.createWriteStream('SOSresults.zip'))
       .on('close', function() {
-        module.exports.unzipResults();
+        //unzip results folder
+        module.exports.unzipResults(res, res);
         console.log('File written!');
       });
   },
 
-  unzipResults: function() {
+  unzipResults: function(res, res) {
     fs.createReadStream('SOSresults.zip')
       .pipe(unzip.Extract({path: 'SOSresults'}))
       .on('close', function() {
-        console.log(module.exports.convertXML('SOSresults/X16PP510_0100v7.xml'));
+        //convert XML into JSON and send back
+        res.send(module.exports.convertXML('SOSresults/X16PP510_0100v7.xml'));
       });
   },
 
@@ -36,49 +39,40 @@ module.exports = {
     var parser = new xml2js.Parser();
     var convertedResults = {};
     convertedResults.contestName = '';
-    convertedResults.candidates = [];
-    convertedResults.validVotes = [];
-    convertedResults.percentVotes = [];
-    convertedResults.party = [];
     convertedResults.issueDate = '';
-    convertedResults.precintsReporting = '';
-    convertedResults.totalPrecints = '';
+    convertedResults.reportingUnits = [];
+
     parser.parseString(xml.substring(0, xml.length), function(err, data) {
       convertedResults.issueDate = JSON.stringify(data["EML"]["EMLHeader"][0]["IssueDate"][0]);
       XMLresults = data["EML"]["Count"][0]["Election"][0]["Contests"][0]["Contest"][0];
       json = JSON.stringify(XMLresults);
       results = JSON.parse(json);
-      convertedResults.contestName = results.ContestIdentifier[0].ContestName;
+      convertedResults.contestName = results.ContestIdentifier[0].ContestName[0];
       reportingUnitVotes = results.ReportingUnitVotes;
       reportingUnitVotes.forEach(function(reportingUnit) {
         var reportingUnitIdentifier = reportingUnit.ReportingUnitIdentifier[0]._;
-        // if (reportingUnitIdentifier === 'San Francisco') {
-          convertedResults.precintsReporting = reportingUnit.CountMetric[0]._;
-          convertedResults.totalPrecints = reportingUnit.CountMetric[1]._;
-          reportingUnit.Selection.forEach(function(selection) {
-            convertedResults.candidates.push(selection.Candidate[0].CandidateFullName[0].PersonFullName[0]);
-            convertedResults.validVotes.push(selection.ValidVotes[0]);
-            convertedResults.percentVotes.push(selection.CountMetric[0]._);
-            convertedResults.party.push(selection.AffiliationIdentifier[0].RegisteredName[0]);
-          });
-        // }
+        convertedResults.reportingUnits.push(module.exports.createResultObj(reportingUnit));
       });
     });
     return convertedResults;
   },
-  getDatafromAPI: function(req, res) {
-    var url = process.env.AP_URL + '&officeID=Z&officeID=P&officeID=H&officeID=Y';
-    rp(url).then(function(body){
-      // body = JSON.parse(body);
-      // var processedData = processData.processAp(body);
-      res.send(module.exports.convertXML());
-      // module.exports.getFromDataBase(req, res);
-    }).catch(function(err){
-      module.exports.getFromDataBase(req, res);
-      log.info(err);
+  createResultObj: function(reportingUnit) {
+    var resultObj = {};
+    resultObj.reportingUnit = reportingUnit.ReportingUnitIdentifier[0]._;
+    resultObj.precintsReporting = reportingUnit.CountMetric[0]._;
+    resultObj.totalPrecints = reportingUnit.CountMetric[1]._;
+    resultObj.candidates = [];
+    reportingUnit.Selection.forEach(function(selection) {
+      var candidateObj = {};
+      candidateObj.name = selection.Candidate[0].CandidateFullName[0].PersonFullName[0];
+      candidateObj.votes = selection.ValidVotes[0];
+      candidateObj.percentVotes = selection.CountMetric[0]._;
+      candidateObj.party = selection.AffiliationIdentifier[0].RegisteredName[0];
+      resultObj.candidates.push(candidateObj);
     });
+    return resultObj;
   },
-  getFromDataBase: function(req, res) {
+  getBackupFromLoader: function(req, res) {
     models.SOSresults.findAll({
       order: 'createdAt DESC',
       limit: 25
