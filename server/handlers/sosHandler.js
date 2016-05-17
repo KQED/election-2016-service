@@ -1,13 +1,38 @@
 var rp = require('request-promise'),
     fs = require('fs'),
+    unzip = require('unzip'),
     log = require('../logging/bunyan'),
     xml2js = require('xml2js'),
     processData = require('../utils/processData'),
     models = require('../../models');
 
 module.exports = {
-  convertXML: function() {
-    var xml = fs.readFileSync('server/handlers/X14GG510_0200v7.xml', 'ascii');
+
+  downloadZip: function(req, res) {
+    var options = {
+      method : "GET",
+      uri: 'http://cms.cdn.sos.ca.gov/media/16PP/X16PPv7.zip',
+      encoding: null,
+      resolveWithFullResponse: true
+    };
+    rp(options)
+      .pipe(fs.createWriteStream('SOSresults.zip'))
+      .on('close', function() {
+        module.exports.unzipResults();
+        console.log('File written!');
+      });
+  },
+
+  unzipResults: function() {
+    fs.createReadStream('SOSresults.zip')
+      .pipe(unzip.Extract({path: 'SOSresults'}))
+      .on('close', function() {
+        console.log(module.exports.convertXML('SOSresults/X16PP510_0100v7.xml'));
+      });
+  },
+
+  convertXML: function(file) {
+    var xml = fs.readFileSync(file, 'ascii');
     var parser = new xml2js.Parser();
     var convertedResults = {};
     convertedResults.contestName = '';
@@ -27,7 +52,7 @@ module.exports = {
       reportingUnitVotes = results.ReportingUnitVotes;
       reportingUnitVotes.forEach(function(reportingUnit) {
         var reportingUnitIdentifier = reportingUnit.ReportingUnitIdentifier[0]._;
-        if (reportingUnitIdentifier === 'San Francisco') {
+        // if (reportingUnitIdentifier === 'San Francisco') {
           convertedResults.precintsReporting = reportingUnit.CountMetric[0]._;
           convertedResults.totalPrecints = reportingUnit.CountMetric[1]._;
           reportingUnit.Selection.forEach(function(selection) {
@@ -36,7 +61,7 @@ module.exports = {
             convertedResults.percentVotes.push(selection.CountMetric[0]._);
             convertedResults.party.push(selection.AffiliationIdentifier[0].RegisteredName[0]);
           });
-        }
+        // }
       });
     });
     return convertedResults;

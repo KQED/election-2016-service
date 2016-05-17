@@ -26,6 +26,7 @@
     "node-uuid": "^1.4.7",
     "request-promise": "^3.0.0",
     "sequelize": "^3.21.0",
+    "unzip": "^0.1.11",
     "xml2js": "^0.4.16"
   }
 }
