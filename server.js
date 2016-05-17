@@ -41,6 +41,7 @@ app.get('/googleDoc', cache.route(), googleHandler.getRows);
 app.get('/ap', cache.route(), apHandler.getJson);
 
 app.get('/sos', sosHandler.getDatafromAPI);
+app.get('/sfgov', googleHandler.getSfRows);
 
 var PORT = process.env.PORT || 8000;
 
