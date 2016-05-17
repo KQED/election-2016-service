@@ -1,7 +1,7 @@
 # election-2016-service
 
 ##About
-A service to collect election results data from AP, CA Secretary of State, and Google Docs.
+A service to collect election results data from AP, CA Secretary of State, and Google Docs. Inspiration for some of this repo was taken from [Elex](https://github.com/newsdev/elex).
 
 ##Requirements
 - Node.js
