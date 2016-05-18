@@ -18,7 +18,7 @@ $ export ELECTIONS_DB_USER='YOUR_MYSQL_USERNAME'
 $ export ELECTIONS_DB_PASS='YOUR_MYSQL_PASSWORD'
 $ export ELECTIONS_DB_PORT='YOUR_MYSQL_PORT'
 $ export NODE_ENV='production' | 'development'
-$ export CACHE_PREFIX='YOUR_CACHE_PREFIX'
+$ export REDIS_URL='REDIS_URL'
 ```
 Note: This service is programmed to use a database named 'election2016'.
 
