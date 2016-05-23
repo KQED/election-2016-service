@@ -1,5 +1,8 @@
+var crypto = require('crypto');
+
 module.exports = {
   processAp: function(apData) {
+    module.exports.votesStore = {};
     var formattedData = apData.races.map(function(raceObject){
       return raceObject.reportingUnits[0].candidates.map(function(candidate){
         return {
@@ -18,22 +21,23 @@ module.exports = {
     var merged = [].concat.apply([], formattedData.filter(module.exports.isRelevant));
     return merged;
   },
+ 
   isRelevant: function(formattedObject) {
     if(formattedObject[0].officename === 'U.S. House' && formattedObject[0].seatname === 'District 17') {
       
-      module.exports.addDataType(formattedObject, 'congressional');
+      module.exports.addDataType(formattedObject, 'datatype', 'congressional');
       return true;
     
     } else if (formattedObject[0].officename === 'U.S. Senate') {
       
-      module.exports.addDataType(formattedObject, 'congressional');
+      module.exports.addDataType(formattedObject, 'datatype', 'congressional');
       return true;
     
     } else if(formattedObject[0].officename === 'State Senate') {
         if(formattedObject[0].seatname === 'District 3' || formattedObject[0].seatname === 'District 9' || 
           formattedObject[0].seatname === 'District 11' || formattedObject[0].seatname === 'District 15') {
         
-          module.exports.addDataType(formattedObject, 'state');
+          module.exports.addDataType(formattedObject, 'datatype', 'state');
           return true;
         
         }
@@ -41,21 +45,35 @@ module.exports = {
       if(formattedObject[0].seatname === 'District 4' || formattedObject[0].seatname === 'District 14' || 
         formattedObject[0].seatname === 'District 16' || formattedObject[0].seatname === 'District 24' || formattedObject[0].seatname === 'District 27') {
         
-        module.exports.addDataType(formattedObject, 'state');
+        module.exports.addDataType(formattedObject, 'datatype', 'state');
         return true;
 
       }
     } else if(formattedObject[0].officename === 'President') {
       
-      module.exports.addDataType(formattedObject, 'presidential');
+      module.exports.addDataType(formattedObject, 'datatype', 'presidential');
       return true;
     
     }
     return false;
   },
-  addDataType: function(array, type) {
+  
+  votesStore: {},
+  
+  addDataType: function(array, key, type) {
     array.forEach(function(item){
-      item.datatype = type;
+      item[key] = type;
     });
+  },
+
+  hashKey: function(value1, value2){
+    var name = value1 + value2;
+    return crypto.createHash('md5').update(name).digest('hex');
+  },
+
+  calculateTotalVotes: function(raceObject) {
+    var key = module.exports.hashKey(raceObject.officeName, raceObject.seatName);
+    return votesStore;
   }
-};
+
+}; 
