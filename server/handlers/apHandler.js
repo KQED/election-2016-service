@@ -5,7 +5,7 @@ var rp = require('request-promise'),
 
 module.exports = {
   getJson: function(req, res) {
-    var url = process.env.AP_URL + '&officeID=Z&officeID=P&officeID=H&officeID=Y';
+    var url = process.env.AP_URL + '&officeID=Z&officeID=P&officeID=H&officeID=Y&officeID=S';
     rp(url).then(function(body){
       body = JSON.parse(body);
       var processedData = processData.processAp(body);
