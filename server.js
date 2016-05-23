@@ -11,7 +11,6 @@ var express = require('express'),
     log = require('./server/logging/bunyan'),
     googleHandler = require('./server/handlers/googleHandler'),
     apHandler = require('./server/handlers/apHandler'),
-    sosHandler = require('./server/handlers/sosHandler'),
     models = require('./models');
 
 log.info("cache_prefix:", cache_prefix);
@@ -39,9 +38,6 @@ app.use(cors(cors_options));
 app.get('/googleDoc', cache.route(), googleHandler.getRows);
 
 app.get('/ap', cache.route(), apHandler.getJson);
-
-app.get('/sos', sosHandler.getSOSresults);
-app.get('/sfgov', googleHandler.getSfRows);
 
 var PORT = process.env.PORT || 8000;
 
