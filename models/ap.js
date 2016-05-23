@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes) {
     precincts: DataTypes.INTEGER,
     firstname: DataTypes.STRING,
     lastname: DataTypes.STRING,
-    // party: DataTypes.STRING,
+    party: DataTypes.STRING,
     votecount: DataTypes.INTEGER,
     winner: DataTypes.STRING
   });
