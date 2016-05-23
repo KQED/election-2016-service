@@ -22,7 +22,6 @@ module.exports = {
     }).then(function(results) {
       var data = [];
       results.forEach(function(result) {
-        console.log(result.dataValues.officename);
         if(result.dataValues.officename === 'President') {
           result.dataValues.datatype = 'presidential';
         } else if(result.dataValues.officename === 'U.S. House' || result.dataValues.officename === 'U.S. Senate') {
