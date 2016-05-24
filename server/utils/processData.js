@@ -1,10 +1,11 @@
 var crypto = require('crypto');
 
 module.exports = {
-  processAp: function(apData) {
+  processAp: function(apData, totalVotes) {
     module.exports.votesStore = {};
     var formattedData = apData.races.map(function(raceObject){
       return raceObject.reportingUnits[0].candidates.map(function(candidate){
+        var voteKey = module.exports.hashKey(raceObject.officeName, raceObject.seatName);
         return {
           officename: raceObject.officeName,
           seatname: raceObject.seatName,
@@ -14,6 +15,7 @@ module.exports = {
           lastname: candidate.last,
           party: candidate.party,
           votecount: candidate.voteCount,
+          votepercent: candidate.voteCount / totalVotes[voteKey],
           winner: candidate.winner ? true : false
         };
       });
@@ -57,9 +59,7 @@ module.exports = {
     }
     return false;
   },
-  
-  votesStore: {},
-  
+    
   addDataType: function(array, key, type) {
     array.forEach(function(item){
       item[key] = type;
@@ -71,8 +71,14 @@ module.exports = {
     return crypto.createHash('md5').update(name).digest('hex');
   },
 
-  calculateTotalVotes: function(raceObject) {
-    var key = module.exports.hashKey(raceObject.officeName, raceObject.seatName);
+  calculateTotalVotes: function(apData) {
+    var votesStore = {};
+    apData.races.forEach(function(raceObject){
+      raceObject.reportingUnits[0].candidates.forEach(function(candidate){
+        var key = module.exports.hashKey(raceObject.officeName, raceObject.seatName);
+        votesStore[key] = votesStore[key] ? votesStore[key] + candidate.voteCount : candidate.voteCount; 
+      });
+    });
     return votesStore;
   }
 

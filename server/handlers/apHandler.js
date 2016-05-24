@@ -8,7 +8,8 @@ module.exports = {
     var url = process.env.AP_URL + '&officeID=Z&officeID=P&officeID=H&officeID=Y&officeID=S';
     rp(url).then(function(body){
       body = JSON.parse(body);
-      var processedData = processData.processAp(body);
+      var totalVotes = processData.calculateTotalVotes(body);
+      var processedData = processData.processAp(body, totalVotes);
       res.send(processedData);
     }).catch(function(err){
       module.exports.getFromDataBase(req, res);
