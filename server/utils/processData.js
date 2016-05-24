@@ -86,7 +86,6 @@ module.exports = {
         votesStore[key] = votesStore[key] ? votesStore[key] + result.dataValues.votecount : result.dataValues.votecount; 
       });
     }
-    console.log(votesStore);
     return votesStore;
   }
 
