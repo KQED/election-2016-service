@@ -19,10 +19,13 @@ module.exports = {
   getFromDataBase: function(req, res) {
     models.APresults.findAll({
       order: 'createdAt DESC',
-      limit: 25
+      limit: 27
     }).then(function(results) {
       var data = [];
+      var totalVotes = processData.calculateTotalVotes(results);
       results.forEach(function(result) {
+        var key = processData.hashKey(result.dataValues.officename, result.dataValues.seatname);
+        result.dataValues.votepercent = result.dataValues.votecount / totalVotes[key];
         if(result.dataValues.officename === 'President') {
           result.dataValues.datatype = 'presidential';
         } else if(result.dataValues.officename === 'U.S. House' || result.dataValues.officename === 'U.S. Senate') {

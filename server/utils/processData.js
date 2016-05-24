@@ -73,12 +73,19 @@ module.exports = {
 
   calculateTotalVotes: function(apData) {
     var votesStore = {};
-    apData.races.forEach(function(raceObject){
-      raceObject.reportingUnits[0].candidates.forEach(function(candidate){
-        var key = module.exports.hashKey(raceObject.officeName, raceObject.seatName);
-        votesStore[key] = votesStore[key] ? votesStore[key] + candidate.voteCount : candidate.voteCount; 
+    if(apData.races) {
+      apData.races.forEach(function(raceObject){
+        raceObject.reportingUnits[0].candidates.forEach(function(candidate){
+          var key = module.exports.hashKey(raceObject.officeName, raceObject.seatName);
+          votesStore[key] = votesStore[key] ? votesStore[key] + candidate.voteCount : candidate.voteCount; 
+        });
+      });      
+    } else {
+      apData.forEach(function(result) {
+        var key = module.exports.hashKey(result.dataValues.officename, result.dataValues.seatname);
+        votesStore[key] = votesStore[key] ? votesStore[key] + result.dataValues.votecount : result.dataValues.votecount; 
       });
-    });
+    }
     return votesStore;
   }
 
