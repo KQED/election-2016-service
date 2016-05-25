@@ -35,7 +35,7 @@ cache.on('error', function(error){
 
 app.use(cors(cors_options));
 
-app.get('/googledoc', cache.route(), googleHandler.getRows);
+app.get('/local', cache.route(), googleHandler.getRows);
 app.get('/sfgov', cache.route(), googleHandler.getSfRows);
 
 app.get('/ap', cache.route(), apHandler.getJson);
