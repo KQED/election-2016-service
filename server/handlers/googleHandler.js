@@ -62,8 +62,6 @@ module.exports = {
     });
   },
   filterRows: function(item) {
-    // console.log(item.contestid);
-    // console.log(sfgovConfig.sfgovContestId.indexOf(item.contestid));
     if(sfgovConfig.sfgovContestId.indexOf(item.contestid) > -1) {
       return true;
     }

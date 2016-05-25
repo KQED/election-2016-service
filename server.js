@@ -39,7 +39,7 @@ app.get('/local', cache.route(), googleHandler.getRows);
 app.get('/sfgov', cache.route(), googleHandler.getSfRows);
 
 app.get('/ap', cache.route(), apHandler.getJson);
-// app.get('/approp', cache.route(), apHandler.getProp);
+app.get('/approp', cache.route(), apHandler.getProp);
 
 var PORT = process.env.PORT || 8000;
 
