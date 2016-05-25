@@ -3,7 +3,6 @@ var crypto = require('crypto'),
 
 module.exports = {
   processAp: function(apData, totalVotes) {
-    module.exports.votesStore = {};
     var formattedData = apData.races.map(function(raceObject){
       return raceObject.reportingUnits[0].candidates.map(function(candidate){
         var voteKey = module.exports.hashKey(raceObject.officeName, raceObject.seatName);
@@ -12,7 +11,7 @@ module.exports = {
           seatname: raceObject.seatName,
           lastupdated: raceObject.reportingUnits[0].lastUpdated,
           precincts: raceObject.reportingUnits[0].precinctsReportingPct,
-          firstname: candidate.first,
+          firstname: candidate.first || null,
           lastname: candidate.last,
           party: candidate.party,
           votecount: candidate.voteCount,
@@ -26,12 +25,13 @@ module.exports = {
   },
  
   isRelevant: function(formattedObject) {
-    if(formattedObject[0].seatname && sfgovConfig.raceFilter[formattedObject[0].officename].indexOf(formattedObject[0].seatname) > -1) {
+    if (formattedObject[0].officename === 'President' || formattedObject[0].officename === 'U.S. Senate' || formattedObject[0].officename === 'Initiative') {
+      return true; 
+    } else if(formattedObject[0].seatname && sfgovConfig.raceFilter[formattedObject[0].officename].indexOf(formattedObject[0].seatname) > -1) {
       module.exports.addDataType(formattedObject, 'counties');     
       return true;
-    } else if (formattedObject[0].officename === 'President' || formattedObject[0].officename === 'U.S. Senate') {
-      return true;
     }
+
     return false;
   },
     
