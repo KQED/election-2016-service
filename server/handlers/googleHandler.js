@@ -1,4 +1,5 @@
-var GoogleSpreadsheet = require('google-spreadsheet');
+var GoogleSpreadsheet = require('google-spreadsheet'),
+    sfgovConfig = require('../utils/sfgovConfig');
 
 module.exports = {
   getRows: function(req, res) {
@@ -46,8 +47,9 @@ module.exports = {
         sheet.getRows({
           offset: 1,
           limit: 300,
-          orderby: 'col2'
+          orderby: 'col1'
         }, function(err, rows){
+          console.log(rows.length);
           var jsonRows = rows.map(function(row){
             delete row._xml;
             delete row.id;
@@ -60,7 +62,9 @@ module.exports = {
     });
   },
   filterRows: function(item) {
-    if(item.candidatefullname.match(/Turnout/) === null) {
+    // console.log(item.contestid);
+    // console.log(sfgovConfig.sfgovContestId.indexOf(item.contestid));
+    if(sfgovConfig.sfgovContestId.indexOf(item.contestid) > -1) {
       return true;
     }
     return false;
