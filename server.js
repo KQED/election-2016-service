@@ -3,7 +3,7 @@ var express = require('express'),
     erc = require('express-redis-cache'),
     uuid = require('node-uuid'),
     cors = require('cors'),
-    cors_options = {origin: '*'},
+    cors_options = {origin: '*', methods: "GET"},
     environment = process.env.NODE_ENV || 'development',
     redisConfig = require('./server/utils/redisConfig'),
     cache_prefix = process.env.CACHE_PREFIX || redisConfig.cache[environment].prefix || uuid.v1().substring(0,6),
@@ -39,6 +39,7 @@ app.get('/local', cache.route(), googleHandler.getRows);
 app.get('/sfgov', cache.route(), googleHandler.getSfRows);
 
 app.get('/ap', cache.route(), apHandler.getJson);
+// app.get('/approp', cache.route(), apHandler.getProp);
 
 var PORT = process.env.PORT || 8000;
 
