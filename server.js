@@ -35,7 +35,19 @@ cache.on('error', function(error){
 
 app.use(cors(cors_options));
 
-app.get('/local', cache.route(), googleHandler.getRows);
+app.post('*', function(req, res) {
+    res.status(403).send('Forbidden');
+});
+
+app.put('*', function(req, res) {
+    res.status(403).send('Forbidden');
+});
+
+app.delete('*', function(req, res) {
+    res.status(403).send('Forbidden');
+});
+
+app.get('/local', cache.route(), googleHandler.getLocalRows);
 app.get('/sfgov', cache.route(), googleHandler.getSfRows);
 
 app.get('/ap', cache.route(), apHandler.getJson);

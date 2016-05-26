@@ -1,5 +1,5 @@
 module.exports = {
-  sfgovContestId: ["19","20","21","22","23","24","25","26"],
+  sfgovContestId: ["19","21","22","23","24","25","26"],
   districtToCounties: {
     "U.S. House" : {
       "District 2": ["Del Norte", "Humboldt", "Trinity", "Mendocino", "Sonoma", "Marin"],

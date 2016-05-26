@@ -55,6 +55,11 @@ module.exports = {
           votesStore[key] = votesStore[key] ? votesStore[key] + candidate.voteCount : candidate.voteCount; 
         });
       });      
+    } else if(apData[0].propdescription) {
+      apData.forEach(function(race) {
+        var key = module.exports.hashKey(race.officename, race.seatname);
+        votesStore[key] = votesStore[key] ? votesStore[key] + parseInt(race.votecount) : parseInt(race.votecount); 
+      });      
     } else {
       apData.forEach(function(result) {
         var key = module.exports.hashKey(result.dataValues.officename, result.dataValues.seatname);
