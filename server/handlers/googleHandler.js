@@ -1,5 +1,6 @@
 var GoogleSpreadsheet = require('google-spreadsheet'),
-    sfgovConfig = require('../utils/sfgovConfig');
+    sfgovConfig = require('../utils/sfgovConfig'),
+    processData = require('../utils/processData');
 
 module.exports = {
   getLocalRows: function(req, res) {
@@ -20,11 +21,14 @@ module.exports = {
           limit: 200,
           orderby: 'col2'
         }, function(err, rows){
+          var totalVotes = processData.calculateTotalVotes(rows);
           var jsonRows = rows.map(function(row){
+            var voteKey = processData.hashKey(row.officename, row.seatname);
             delete row._xml;
             delete row.id;
             delete row._links;
             row.counties = row.counties.split(",");
+            row.votepercent = row.votecount / totalVotes[voteKey];
             return row;
           });
           res.send(jsonRows);
