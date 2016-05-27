@@ -1,47 +1,56 @@
 var rp = require('request-promise'),
     log = require('../logging/bunyan'),
     processData = require('../utils/processData'),
-    models = require('../../models');
+    models = require('../../models'),
+    sfgovConfig = require('../utils/sfgovConfig');
 
 module.exports = {
-  getProp: function(req, res) {
-    var url = process.env.AP_URL + '&officeid=I&raceid=8689';
+  //gets prop data from AP API
+  getProp: function(req, res) {    
     
-    rp(url).then(function(body){
-      console.log(body);
-      body = JSON.parse(body);
-      var totalVotes = processData.calculateTotalVotes(body);
-
-      var processedData = processData.processAp(body, totalVotes);
-      res.send(processedData);
-    }).catch(function(err){
-      module.exports.getFromDataBase(req, res);
-      log.info(err);
-    });
+    module.exports.pullFromAp(req, res, '&officeid=I&raceid=8689', module.exports.getPropsFromDataBase);
+  
   },
+  //gets race data from AP API
   getJson: function(req, res) {
-    var url = process.env.AP_URL + '&officeID=Z&officeID=P&officeID=H&officeID=Y&officeID=S';
+  
+    module.exports.pullFromAp(req, res, '&officeID=Z&officeID=P&officeID=H&officeID=Y&officeID=S', module.exports.getFromDataBase);
+  
+  },
+  pullFromAp: function(req, res, endpoint, errcallback) {
+  
+    var url = process.env.AP_URL + endpoint;
+
     rp(url).then(function(body){
       body = JSON.parse(body);
       var totalVotes = processData.calculateTotalVotes(body);
       var processedData = processData.processAp(body, totalVotes);
       res.send(processedData);
     }).catch(function(err){
-      module.exports.getFromDataBase(req, res);
+      //if AP API is throttling us or some other error, pull backup data from DB
+      errcallback(req, res);
       log.info(err);
     });
+
   },
+  //gets AP race data from DB
   getFromDataBase: function(req, res) {
     models.APresults.findAll({
-      order: 'createdAt DESC'
+      where: {
+        officename: {
+          $ne: 'Initiative'
+        }
+      }
     }).then(function(results) {
       var data = [];
       var totalVotes = processData.calculateTotalVotes(results);
       results.forEach(function(result) {
+        //find key for hash table to get total votecount data
         var key = processData.hashKey(result.dataValues.officename, result.dataValues.seatname);
         result.dataValues.votepercent = result.dataValues.votecount / totalVotes[key];
-        if(result.dataValues.officename !== 'President' || result.dataValues.officename !== 'U.S. Senate') {
-          result.dataValue.counties = sfgovConfig.districtToCounties[result.dataValues.officename][result.dataValues.seatname];
+        
+        if(result.dataValues.officename !== 'President' && result.dataValues.officename !== 'U.S. Senate') {
+          result.dataValues.counties = sfgovConfig.districtToCounties[result.dataValues.officename][result.dataValues.seatname];
         }
         if(result.dataValues.winner === 'X') {
           result.dataValues.winner = true;
@@ -52,5 +61,29 @@ module.exports = {
       });
       res.send(data);
     });
+  },
+  //gets AP prop data from DB
+  getPropsFromDataBase: function(req, res) {
+    
+    models.APresults.findAll({
+      where: {
+        officename: 'Initiative'
+      }
+    }).then(function(results) {
+      var data = [];
+      var totalVotes = processData.calculateTotalVotes(results);
+      results.forEach(function(result) {
+        var key = processData.hashKey(result.dataValues.officename, result.dataValues.seatname);
+        result.dataValues.votepercent = result.dataValues.votecount / totalVotes[key];
+        if(result.dataValues.winner === 'X') {
+          result.dataValues.winner = true;
+        } else {
+          result.dataValues.winner = false;
+        }
+        data.push(result.dataValues);
+      });
+      res.send(data);
+    });
   }
+
 };

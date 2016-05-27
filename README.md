@@ -1,12 +1,13 @@
 # election-2016-service
 
 ##About
-A service to collect election results data from AP, CA Secretary of State, and Google Docs. Inspiration for some of this repo was taken from [Elex](https://github.com/newsdev/elex).
+A service to collect election results data from AP, the San Francisco city government website and local races. Inspiration for some of this repo was taken from [Elex](https://github.com/newsdev/elex).
 
 ##Requirements
 - Node.js
 - npm
 - MySQL
+- Redis
 
 ##Configuration
 Set the following environment variables:
@@ -38,14 +39,13 @@ $ node server.js
 
 ##Endpoints
 ### `/ap`
-Get election results data from AP API
+Get race election results data from AP API
 
-### `/sos`
-Get election results data from CA Secretary of State XML feed
+### `/approp`
+Get prop results data from AP API
 
-### `/googleDoc`
-Get election results data from designated Google Doc
+### `/local`
+Get local election results data from designated Google Doc
 
-
-
-
+### `/sfgov`
+Get San Francisco election results data from designated Google Doc
