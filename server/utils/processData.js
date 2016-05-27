@@ -32,7 +32,6 @@ module.exports = {
       module.exports.addDataType(formattedObject, 'counties');     
       return true;
     }
-
     return false;
   },
   //used to add counties property to race objects  
