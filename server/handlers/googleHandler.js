@@ -3,6 +3,7 @@ var GoogleSpreadsheet = require('google-spreadsheet'),
     processData = require('../utils/processData');
 
 module.exports = {
+  //get local results
   getLocalRows: function(req, res) {
     var sheet;
     var doc = new GoogleSpreadsheet(process.env.GOOGLE_DOCS_KEY);
@@ -24,10 +25,13 @@ module.exports = {
           var totalVotes = processData.calculateTotalVotes(rows);
           var jsonRows = rows.map(function(row){
             var voteKey = processData.hashKey(row.officename, row.seatname);
+            //remove unwanted google doc metadata
             delete row._xml;
             delete row.id;
             delete row._links;
+            //transform counties string into array
             row.counties = row.counties.split(",");
+            //calculate percentage of votes based on total votes
             row.votepercent = row.votecount / totalVotes[voteKey];
             return row;
           });
@@ -36,6 +40,7 @@ module.exports = {
       });
     });
   },
+  //get San Francisco government results (uploaded to google sheet)
   getSfRows: function(req, res) {
     var sheet;
     var doc = new GoogleSpreadsheet(process.env.GOOGLE_DOCS_KEY);
@@ -59,6 +64,7 @@ module.exports = {
             delete row.id;
             delete row._links;
             return row;
+          //filter to only return rows of desired races
           }).filter(module.exports.filterRows);
           res.send(jsonRows);
         });
