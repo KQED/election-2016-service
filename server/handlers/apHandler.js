@@ -35,6 +35,7 @@ module.exports = {
   },
   //gets AP race data from DB
   getFromDataBase: function(req, res) {
+
     models.APresults.findAll({
       where: {
         officename: {
@@ -61,6 +62,7 @@ module.exports = {
       });
       res.send(data);
     });
+
   },
   //gets AP prop data from DB
   getPropsFromDataBase: function(req, res) {
