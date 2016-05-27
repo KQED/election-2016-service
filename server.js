@@ -34,7 +34,7 @@ cache.on('error', function(error){
 });
 
 app.use(cors(cors_options));
-
+//restrict anything other than GET requests
 app.post('*', function(req, res) {
     res.status(403).send('Forbidden');
 });

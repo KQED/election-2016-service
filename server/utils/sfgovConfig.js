@@ -1,5 +1,7 @@
 module.exports = {
+  //array of desired race ids from SF gov spreadsheet
   sfgovContestId: ["19","21","22","23","24","25","26"],
+  //maps races in districts to county for filtering on frontend
   districtToCounties: {
     "U.S. House" : {
       "District 2": ["Del Norte", "Humboldt", "Trinity", "Mendocino", "Sonoma", "Marin"],
@@ -45,6 +47,7 @@ module.exports = {
       "District 30": ["Monterey", "San Benito", "Santa Clara", "Santa Cruz"]
     }
   },
+  //filter for only desired AP races
   raceFilter: {
     "U.S. House": ["District 2", "District 3", "District 5", "District 11",
     "District 12", "District 13", "District 14", "District 15", "District 17",
