@@ -37,12 +37,20 @@ $ redis-server
 $ node server.js
 ```
 
+##Testing
+```
+npm test
+```
+
 ##Endpoints
 ### `/ap`
 Get race election results data from AP API
 
 ### `/approp`
 Get prop results data from AP API
+
+### `/apsenatepres`
+Get US Senate and Presidential results data from AP API
 
 ### `/local`
 Get local election results data from designated Google Doc
