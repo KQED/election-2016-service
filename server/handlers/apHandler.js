@@ -8,7 +8,7 @@ module.exports = {
   //gets prop data from AP API
   getProp: function(req, res) {    
     
-    module.exports.pullFromAp(req, res, '&officeid=I&raceid=8689', module.exports.getPropsFromDataBase);
+    module.exports.pullFromAp(req, res, '&officeid=I&raceid=8689', module.exports.getPropsFromDataBase, null);
   
   },
   getSenatePres: function(req, res) {    
