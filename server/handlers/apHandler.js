@@ -11,10 +11,15 @@ module.exports = {
     module.exports.pullFromAp(req, res, '&officeid=I&raceid=8689', module.exports.getPropsFromDataBase);
   
   },
-  //gets race data from AP API
-  getJson: function(req, res) {
+  getSenate: function(req, res) {    
+    
+    module.exports.pullFromAp(req, res, '&officeID=S', module.exports.getPropsFromDataBase);
   
-    module.exports.pullFromAp(req, res, '&officeID=Z&officeID=P&officeID=H&officeID=Y&officeID=S', module.exports.getFromDataBase);
+  },
+  //gets race data from AP API
+  getOtherRaces: function(req, res) {
+  
+    module.exports.pullFromAp(req, res, '&officeID=Z&officeID=H&officeID=Y&officeID=S', module.exports.getFromDataBase);
   
   },
   pullFromAp: function(req, res, endpoint, errcallback) {
@@ -50,7 +55,7 @@ module.exports = {
         var key = processData.hashKey(result.dataValues.officename, result.dataValues.seatname);
         result.dataValues.votepercent = result.dataValues.votecount / totalVotes[key];
         
-        if(result.dataValues.officename !== 'President' && result.dataValues.officename !== 'U.S. Senate') {
+        if(result.dataValues.officename !== 'U.S. Senate') {
           result.dataValues.counties = sfgovConfig.districtToCounties[result.dataValues.officename][result.dataValues.seatname];
         }
         if(result.dataValues.winner === 'X') {

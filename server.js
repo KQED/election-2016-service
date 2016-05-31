@@ -51,7 +51,8 @@ app.delete('*', function(req, res) {
 app.get('/local', cache.route(), googleHandler.getLocalRows);
 app.get('/sfgov', cache.route(), googleHandler.getSfRows);
 
-app.get('/ap', cache.route(), apHandler.getJson);
+app.get('/ap', cache.route(), apHandler.getOtherRaces);
+app.get('/apSenate', cache.route(), apHandler.getSenate);
 app.get('/approp', cache.route(), apHandler.getProp);
 
 var PORT = process.env.PORT || 8000;

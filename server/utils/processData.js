@@ -26,7 +26,7 @@ module.exports = {
   },
   //only return relevant races
   isRelevant: function(formattedObject) {
-    if (formattedObject[0].officename === 'President' || formattedObject[0].officename === 'U.S. Senate' || formattedObject[0].officename === 'Initiative') {
+    if (formattedObject[0].officename === 'U.S. Senate' || formattedObject[0].officename === 'Initiative') {
       return true; 
     } else if(formattedObject[0].seatname && sfgovConfig.raceFilter[formattedObject[0].officename].indexOf(formattedObject[0].seatname) > -1) {
       module.exports.addDataType(formattedObject, 'counties');     
