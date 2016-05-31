@@ -52,7 +52,7 @@ app.get('/local', cache.route(), googleHandler.getLocalRows);
 app.get('/sfgov', cache.route(), googleHandler.getSfRows);
 
 app.get('/ap', cache.route(), apHandler.getOtherRaces);
-app.get('/apSenate', cache.route(), apHandler.getSenate);
+app.get('/apsenatepres', cache.route(), apHandler.getSenatePres);
 app.get('/approp', cache.route(), apHandler.getProp);
 
 var PORT = process.env.PORT || 8000;
