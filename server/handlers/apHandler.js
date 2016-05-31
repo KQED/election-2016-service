@@ -8,16 +8,38 @@ module.exports = {
   //gets prop data from AP API
   getProp: function(req, res) {    
     
-    module.exports.pullFromAp(req, res, '&officeid=I&raceid=8689', module.exports.getPropsFromDataBase);
+    module.exports.pullFromAp(req, res, '&officeid=I&raceid=8689', module.exports.getPropsFromDataBase, null);
+  
+  },
+  getSenatePres: function(req, res) {    
+    
+    var query = { 
+      where: {
+          $or: [
+            {officename: 'President'},
+            {officename: 'U.S. Senate'}
+          ]
+      }};    
+    
+    module.exports.pullFromAp(req, res, '&officeID=S&officeID=P', module.exports.getFromDataBase, query);
   
   },
   //gets race data from AP API
-  getJson: function(req, res) {
-  
-    module.exports.pullFromAp(req, res, '&officeID=Z&officeID=P&officeID=H&officeID=Y&officeID=S', module.exports.getFromDataBase);
+  getOtherRaces: function(req, res) {
+    
+    var query = { 
+      where: {
+          $and: [
+            {officename: {$ne: 'Initiative'}},
+            {officename: {$ne: 'President'}},
+            {officename: {$ne: 'U.S. Senate'}}
+        ]
+    }};
+
+    module.exports.pullFromAp(req, res, '&officeID=Z&officeID=H&officeID=Y&officeID=S', module.exports.getFromDataBase, query);
   
   },
-  pullFromAp: function(req, res, endpoint, errcallback) {
+  pullFromAp: function(req, res, endpoint, errcallback, query) {
   
     var url = process.env.AP_URL + endpoint;
 
@@ -28,21 +50,16 @@ module.exports = {
       res.send(processedData);
     }).catch(function(err){
       //if AP API is throttling us or some other error, pull backup data from DB
-      errcallback(req, res);
+      errcallback(req, res, query);
       log.info(err);
     });
 
   },
   //gets AP race data from DB
-  getFromDataBase: function(req, res) {
+  getFromDataBase: function(req, res, query) {
 
-    models.APresults.findAll({
-      where: {
-        officename: {
-          $ne: 'Initiative'
-        }
-      }
-    }).then(function(results) {
+    models.APresults.findAll(query).then(function(results) {
+
       var data = [];
       var totalVotes = processData.calculateTotalVotes(results);
       results.forEach(function(result) {
@@ -50,7 +67,7 @@ module.exports = {
         var key = processData.hashKey(result.dataValues.officename, result.dataValues.seatname);
         result.dataValues.votepercent = result.dataValues.votecount / totalVotes[key];
         
-        if(result.dataValues.officename !== 'President' && result.dataValues.officename !== 'U.S. Senate') {
+        if(result.dataValues.officename !== 'U.S. Senate' && result.dataValues.officename !== 'President') {
           result.dataValues.counties = sfgovConfig.districtToCounties[result.dataValues.officename][result.dataValues.seatname];
         }
         if(result.dataValues.winner === 'X') {
