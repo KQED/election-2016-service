@@ -33,6 +33,7 @@ module.exports = {
             row.counties = row.counties.split(",");
             //calculate percentage of votes based on total votes
             row.votepercent = row.votecount / totalVotes[voteKey];
+            row.totalvotes = totalVotes[voteKey];
             return row;
           });
           res.send(jsonRows);
