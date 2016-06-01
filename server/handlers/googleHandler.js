@@ -67,6 +67,8 @@ module.exports = {
             delete row._links;
             row.precincts = row.processeddone / row.totalprecincts;
             row.votepercent = row.total / row.contesttotal;
+            row.propdescription = sfgovConfig.sfgovDescription[row.contestfullname];
+            console.log(sfgovConfig.sfgovDescription[row.contestfullname]);
             return row;
           //filter to only return rows of desired races
           }).filter(module.exports.filterRows);
