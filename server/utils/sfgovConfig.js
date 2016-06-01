@@ -1,6 +1,6 @@
 module.exports = {
   //array of desired race ids from SF gov spreadsheet
-  sfgovContestId: ["19","21","22","23","24","25","26"],
+  sfgovContestId: ["21","22","23","24","25"],
   //maps races in districts to county for filtering on frontend
   districtToCounties: {
     "U.S. House" : {
