@@ -17,7 +17,8 @@ module.exports = {
           party: candidate.party,
           votecount: candidate.voteCount,
           votepercent: candidate.voteCount / totalVotes[voteKey],
-          winner: candidate.winner ? true : false
+          winner: candidate.winner ? true : false,
+          totalvotes: totalVotes[voteKey]
         };
       });
     });

@@ -66,6 +66,7 @@ module.exports = {
         //find key for hash table to get total votecount data
         var key = processData.hashKey(result.dataValues.officename, result.dataValues.seatname);
         result.dataValues.votepercent = result.dataValues.votecount / totalVotes[key];
+        result.dataValues.totalvotes = totalVotes;
         
         if(result.dataValues.officename !== 'U.S. Senate' && result.dataValues.officename !== 'President') {
           result.dataValues.counties = sfgovConfig.districtToCounties[result.dataValues.officename][result.dataValues.seatname];
@@ -94,6 +95,7 @@ module.exports = {
       results.forEach(function(result) {
         var key = processData.hashKey(result.dataValues.officename, result.dataValues.seatname);
         result.dataValues.votepercent = result.dataValues.votecount / totalVotes[key];
+        result.dataValues.totalvotes = totalVotes;
         if(result.dataValues.winner === 'X') {
           result.dataValues.winner = true;
         } else {
