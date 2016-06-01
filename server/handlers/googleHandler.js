@@ -19,7 +19,7 @@ module.exports = {
                 
         sheet.getRows({
           offset: 1,
-          limit: 200,
+          limit: 250,
           orderby: 'col2'
         }, function(err, rows){
           var totalVotes = processData.calculateTotalVotes(rows);
@@ -32,6 +32,7 @@ module.exports = {
             //transform counties string into array
             row.counties = row.counties.split(",");
             //calculate percentage of votes based on total votes
+            row.votecount = parseInt(row.votecount);
             row.votepercent = row.votecount / totalVotes[voteKey];
             row.totalvotes = totalVotes[voteKey];
             return row;
