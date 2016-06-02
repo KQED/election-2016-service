@@ -1,6 +1,13 @@
 module.exports = {
   //array of desired race ids from SF gov spreadsheet
   sfgovContestId: ["21","22","23","24","25"],
+  sfgovDescription: {
+    "Local Measure A": "Public health and safety bond",
+    "Local Measure B": "Park, rec and open space fund",
+    "Local Measure C": "Affordable housing requirements",
+    "Local Measure D": "Office of citizen complaints",
+    "Local Measure E": "Paid sick leave"
+  },
   //maps races in districts to county for filtering on frontend
   districtToCounties: {
     "U.S. House" : {
