@@ -41,10 +41,10 @@ module.exports = {
   
   },
   pullFromAp: function(req, res, endpoint, errcallback, query) {
-    console.log('**************************pulling from AP***************************');
+    // console.log('**************************pulling from AP***************************');
   
     var url = process.env.AP_URL + endpoint;
-    console.log('url', url);
+    // console.log('url', url);
 
     rp(url).then(function(body){
       body = JSON.parse(body);
@@ -53,7 +53,7 @@ module.exports = {
       var processedData = processData.processAp(body, totalVotes);
       res.send(processedData);
     }).catch(function(err){
-      console.log('*****************getting from DB********************************');
+      // console.log('*****************getting from DB********************************');
       //if AP API is throttling us or some other error, pull backup data from DB
       errcallback(req, res, query);
       log.info(err);
@@ -64,7 +64,7 @@ module.exports = {
   getFromDataBase: function(req, res, query) {
 
     models.APresults.findAll(query).then(function(results) {
-      console.log('results from DB', results);
+      // console.log('results from DB', results);
 
       var data = [];
       var totalVotes = processData.calculateTotalVotes(results);

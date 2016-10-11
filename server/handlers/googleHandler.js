@@ -137,7 +137,7 @@ module.exports = {
                 
         sheet.getRows({
           offset: 1,
-          limit: 350,
+          limit: 300,
           orderby: 'col1'
         }, function(err, rows){
           var jsonRows = rows.map(function(row){
