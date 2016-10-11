@@ -6,9 +6,9 @@ var rp = require('request-promise'),
 
 module.exports = {
   //gets prop data from AP API
-  getProp: function(req, res) {    
+  getProps: function(req, res) {    
     
-    module.exports.pullFromAp(req, res, '&officeid=I&raceid=8689', module.exports.getPropsFromDataBase, null);
+    module.exports.pullFromAp(req, res, '&officeID=I', module.exports.getPropsFromDataBase, null);
   
   },
   getSenatePres: function(req, res) {    
@@ -30,7 +30,8 @@ module.exports = {
     var query = { 
       where: {
           $and: [
-            {officename: {$ne: 'Initiative'}},
+            {officename: {$ne: 'Proposition'}},
+            {officename: {$ne: 'Measure'}},
             {officename: {$ne: 'President'}},
             {officename: {$ne: 'U.S. Senate'}}
         ]
@@ -40,15 +41,19 @@ module.exports = {
   
   },
   pullFromAp: function(req, res, endpoint, errcallback, query) {
+    // console.log('**************************pulling from AP***************************');
   
     var url = process.env.AP_URL + endpoint;
+    // console.log('url', url);
 
     rp(url).then(function(body){
       body = JSON.parse(body);
+      // console.log('body from AP', body);
       var totalVotes = processData.calculateTotalVotes(body);
       var processedData = processData.processAp(body, totalVotes);
       res.send(processedData);
     }).catch(function(err){
+      // console.log('*****************getting from DB********************************');
       //if AP API is throttling us or some other error, pull backup data from DB
       errcallback(req, res, query);
       log.info(err);
@@ -59,6 +64,7 @@ module.exports = {
   getFromDataBase: function(req, res, query) {
 
     models.APresults.findAll(query).then(function(results) {
+      // console.log('results from DB', results);
 
       var data = [];
       var totalVotes = processData.calculateTotalVotes(results);
@@ -87,7 +93,7 @@ module.exports = {
     
     models.APresults.findAll({
       where: {
-        officename: 'Initiative'
+        officename: 'Proposition'
       }
     }).then(function(results) {
       var data = [];

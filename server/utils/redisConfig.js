@@ -9,7 +9,7 @@ module.exports = {
       },
       production: {
           enabled                 : true,
-          cache_expiry_seconds    : 60 * 5,
+          cache_expiry_seconds    : 60 * 1,
           redis_host              : process.env.REDIS_URL,
           redis_port              : 6379
       }

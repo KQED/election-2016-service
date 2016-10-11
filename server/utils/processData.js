@@ -17,6 +17,7 @@ module.exports = {
           party: candidate.party,
           votecount: candidate.voteCount,
           votepercent: candidate.voteCount / totalVotes[voteKey],
+          electWon: candidate.electWon,
           winner: candidate.winner ? true : false,
           totalvotes: totalVotes[voteKey]
         };
@@ -27,8 +28,10 @@ module.exports = {
   },
   //only return relevant races
   isRelevant: function(formattedObject) {
-    if (formattedObject[0].officename === 'President' || formattedObject[0].officename === 'U.S. Senate' || formattedObject[0].officename === 'Initiative') {
-      return true; 
+    if (formattedObject[0].officename === 'President' || formattedObject[0].officename === 'U.S. Senate' || formattedObject[0].officename === 'Proposition') {
+      return true;
+    } else if(formattedObject[0].officename === 'Measure') {
+      return false;
     } else if(formattedObject[0].seatname && sfgovConfig.raceFilter[formattedObject[0].officename].indexOf(formattedObject[0].seatname) > -1) {
       module.exports.addDataType(formattedObject, 'counties');     
       return true;
@@ -71,6 +74,25 @@ module.exports = {
       });
     }
     return votesStore;
+  },
+
+  //calculate presidential and senate total votes
+  calculateTotalPresSenateVotes: function(data) {
+    var votesStore = {};
+    data.forEach(function(race) {
+      if(race.officename === 'President') {
+        var key = module.exports.hashKey(race.officename, race.party);
+        votesStore[key] = votesStore[key] ? votesStore[key] + parseInt(race.votecount) : parseInt(race.votecount);        
+      } else if(race.officename === 'U.S. Senate') {
+        var key = module.exports.hashKey(race.officename);
+        votesStore[key] = votesStore[key] ? votesStore[key] + parseInt(race.votecount) : parseInt(race.votecount);        
+      } else {
+        var key = module.exports.hashKey(race.officename, race.seatname);
+        votesStore[key] = votesStore[key] ? votesStore[key] + parseInt(race.votecount) : parseInt(race.votecount);
+      }
+    });
+    return votesStore;
+
   }
 
 }; 
