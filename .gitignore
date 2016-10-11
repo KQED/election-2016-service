@@ -5,3 +5,4 @@ dump.rdb
 SOSresults.zip
 SOSresults/
 npm-debug.log
+.DS_Store

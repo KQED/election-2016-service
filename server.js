@@ -48,12 +48,14 @@ app.delete('*', function(req, res) {
     res.status(403).send('Forbidden');
 });
 
-app.get('/local', cache.route(), googleHandler.getLocalRows);
-app.get('/sfgov', cache.route(), googleHandler.getSfRows);
+app.get('/local', googleHandler.getLocalRows);
+app.get('/pressenate', googleHandler.getPresSenateRows);
+app.get('/house', googleHandler.getHouseRows);
+app.get('/sfgov', googleHandler.getSfRows);
 
-app.get('/ap', cache.route(), apHandler.getOtherRaces);
-app.get('/apsenatepres', cache.route(), apHandler.getSenatePres);
-app.get('/approp', cache.route(), apHandler.getProp);
+app.get('/ap', apHandler.getOtherRaces);
+app.get('/apsenatepres', apHandler.getSenatePres);
+app.get('/approp', apHandler.getProps);
 
 var PORT = process.env.PORT || 8000;
 

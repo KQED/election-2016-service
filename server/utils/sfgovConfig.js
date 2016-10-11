@@ -1,6 +1,6 @@
 module.exports = {
   //array of desired race ids from SF gov spreadsheet
-  sfgovContestId: ["21","22","23","24","25"],
+  sfgovContestId: ["8","11","21","22","23","24","25"],
   sfgovDescription: {
     "Local Measure A": "Public health and safety bond",
     "Local Measure B": "Park, rec and open space fund",
