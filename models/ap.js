@@ -11,6 +11,7 @@ module.exports = function(sequelize, DataTypes) {
     lastname: DataTypes.STRING,
     party: DataTypes.STRING,
     votecount: DataTypes.INTEGER,
+    electWon: DataTypes.INTEGER,
     winner: DataTypes.STRING
   });
 
