@@ -1,6 +1,5 @@
 var GoogleSpreadsheet = require('google-spreadsheet'),
     sfgovConfig = require('../utils/sfgovConfig'),
-    async = require('async'),
     processData = require('../utils/processData');
 
 module.exports = {
@@ -70,11 +69,10 @@ module.exports = {
             delete row.id;
             delete row._links;
             //calculate percentage of votes based on total votes
-            row.totalvotes = parseInt(row.totalvotes);
-            row.votecount = parseInt(row.percentofvotes)*parseInt(row.totalvotes)/100;
-            row.votepercent = row.totalvotes / totalVotes[voteKey];
+            row.votecount = parseInt(row.totalvotes);
+            row.votepercent = row.votecount / totalVotes[voteKey];
             row.precinctsReportingPct = parseInt(row.numprecincttotal)/parseInt(row.numprecinctrptg);
-            // row.totalvotesforRace = totalVotes[voteKey];
+            row.totalvotes = totalVotes[voteKey];
             return row;
           });
           res.send(jsonRows);
@@ -173,7 +171,6 @@ module.exports = {
           limit: 300,
           orderby: 'col1'
         }, function(err, rows){
-          console.log('sf rows', rows);
           var jsonRows = rows.map(function(row){
             delete row._xml;
             delete row.id;

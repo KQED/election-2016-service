@@ -84,7 +84,7 @@ module.exports = {
         var key = module.exports.hashKey(race.officename, race.seatname);
         votesStore[key] = votesStore[key] ? votesStore[key] + parseInt(race.votecount) : parseInt(race.votecount);
       } else if(race.contestname) {
-        var key = module.exports.hashKey(race.contestname, race.choicename);
+        var key = module.exports.hashKey(race.contestname);
         votesStore[key] = votesStore[key] ? votesStore[key] + parseInt(race.totalvotes) : parseInt(race.totalvotes);
       }
     });
