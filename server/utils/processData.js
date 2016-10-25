@@ -76,19 +76,16 @@ module.exports = {
     return votesStore;
   },
 
-  //calculate presidential and senate total votes
-  calculateTotalPresSenateVotes: function(data) {
+  //calculate total votes from data in google doc
+  calculateGoogleSheetTotalVotes: function(data) {
     var votesStore = {};
     data.forEach(function(race) {
-      if(race.officename === 'President') {
-        var key = module.exports.hashKey(race.officename, race.party);
-        votesStore[key] = votesStore[key] ? votesStore[key] + parseInt(race.votecount) : parseInt(race.votecount);        
-      } else if(race.officename === 'U.S. Senate') {
-        var key = module.exports.hashKey(race.officename);
-        votesStore[key] = votesStore[key] ? votesStore[key] + parseInt(race.votecount) : parseInt(race.votecount);        
-      } else {
+      if(race.officename) {
         var key = module.exports.hashKey(race.officename, race.seatname);
         votesStore[key] = votesStore[key] ? votesStore[key] + parseInt(race.votecount) : parseInt(race.votecount);
+      } else if(race.contestname) {
+        var key = module.exports.hashKey(race.contestname, race.choicename);
+        votesStore[key] = votesStore[key] ? votesStore[key] + parseInt(race.totalvotes) : parseInt(race.totalvotes);
       }
     });
     return votesStore;

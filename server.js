@@ -49,9 +49,10 @@ app.delete('*', function(req, res) {
 });
 
 app.get('/local', googleHandler.getLocalRows);
-// app.get('/pressenate', googleHandler.getPresSenateRows);
-// app.get('/house', googleHandler.getHouseRows);
-app.get('/sfgov', googleHandler.getSfRows);
+app.get('/contraCosta', googleHandler.getContraCosta);
+app.get('/sf', googleHandler.getSfRows);
+app.get('/santaClara', googleHandler.getSantaClara);
+app.get('/solano', googleHandler.getSolano);
 
 app.get('/ap', apHandler.getOtherRaces);
 app.get('/apsenatepres', apHandler.getSenatePres);
