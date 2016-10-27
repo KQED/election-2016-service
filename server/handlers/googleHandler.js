@@ -51,19 +51,20 @@ module.exports = {
                 
         sheet.getRows({
           offset: 1,
-          limit: 175,
+          limit: 400,
           orderby: 'col2'
         }, function(err, rows){
           var totalVotes = processData.calculateGoogleSheetTotalVotes(rows);
           var jsonRows = rows.map(function(row){
-            var voteKey = processData.hashKey(row.officename, row.seatname);
+            var voteKey = processData.hashKey(row.contestname);
             //remove unwanted google doc metadata
             delete row._xml;
             delete row.id;
             delete row._links;
             //calculate percentage of votes based on total votes
-            row.votecount = parseInt(row.votecount);
+            row.votecount = parseInt(row.totalvotes);
             row.votepercent = row.votecount / totalVotes[voteKey];
+            row.precinctsReportingPct = parseInt(row.numprecincttotal)/parseInt(row.numprecinctrptg);
             row.totalvotes = totalVotes[voteKey];
             return row;
           });
@@ -72,8 +73,7 @@ module.exports = {
       });
     });
   },
-  //get local results
-  getLocalRows: function(req, res) {
+  getMarin: function(req, res) {
     var sheet;
     var doc = new GoogleSpreadsheet(process.env.GOOGLE_DOCS_KEY);
     doc.getInfo(function(err, info){
@@ -91,20 +91,17 @@ module.exports = {
           limit: 300,
           orderby: 'col2'
         }, function(err, rows){
-          var totalVotes = processData.calculateGoogleSheetTotalVotes(rows);
+          // var totalVotes = processData.calculateGoogleSheetTotalVotes(rows);
           var jsonRows = rows.map(function(row){
             var voteKey = processData.hashKey(row.officename, row.seatname);
             //remove unwanted google doc metadata
             delete row._xml;
             delete row.id;
             delete row._links;
-            //transform counties string into array
-            row.counties = row.counties !== '' ? row.counties.split(",") : '';
-            // row.counties = row.counties.split(",");
             //calculate percentage of votes based on total votes
-            row.votecount = parseInt(row.votecount);
-            row.votepercent = row.votecount / totalVotes[voteKey];
-            row.totalvotes = totalVotes[voteKey];
+            // row.votecount = parseInt(row.votecount);
+            // row.votepercent = row.votecount / totalVotes[voteKey];
+            // row.totalvotes = totalVotes[voteKey];
             return row;
           });
           res.send(jsonRows);
