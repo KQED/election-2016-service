@@ -48,9 +48,9 @@ app.delete('*', function(req, res) {
     res.status(403).send('Forbidden');
 });
 
-app.get('/local', googleHandler.getLocalRows);
 app.get('/alameda', googleHandler.getAlameda);
 app.get('/contraCosta', googleHandler.getContraCosta);
+app.get('/marin', googleHandler.getMarin);
 app.get('/sf', googleHandler.getSfRows);
 app.get('/santaClara', googleHandler.getSantaClara);
 app.get('/solano', googleHandler.getSolano);
