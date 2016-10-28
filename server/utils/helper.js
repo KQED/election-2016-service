@@ -35,7 +35,7 @@ module.exports = {
     if(selectedCounty === 'Alameda') {
       resultsByCategory.Oakland = {};
       resultsByCategory.Berkeley = {};
-      results.forEach((result) => {
+      results.forEach(function(result) {
         if(result.contestfullname.indexOf('Measure') > -1) {
           if(resultsByCategory.measures[result.contestfullname]) {
             resultsByCategory.measures[result.contestfullname].push(result);
@@ -63,7 +63,7 @@ module.exports = {
         }
       });
     } else if(selectedCounty === 'SanFrancisco') {
-      results.forEach((result) => {
+      results.forEach(function(result) {
         if(result.contestfullname.indexOf('Measure') > -1) {
           if(resultsByCategory.measures[result.contestfullname]) {
             resultsByCategory.measures[result.contestfullname].push(result);
@@ -79,7 +79,7 @@ module.exports = {
         }
       });
     } else if(selectedCounty === 'ContraCosta') {
-      results.forEach((result) => {
+      results.forEach(function(result) {
         if(result.contestname.indexOf('Measure') > -1) {
           if(resultsByCategory.measures[result.contestname]) {
             resultsByCategory.measures[result.contestname].push(result);
@@ -96,7 +96,7 @@ module.exports = {
       });
     } else if(selectedCounty === 'SantaClara') {
       resultsByCategory.SanJose = {};
-      results.forEach((result) => {
+      results.forEach(function(result) {
         if(result.contestname.indexOf('Measure') > -1) {
           if(resultsByCategory.measures[result.contestname]) {
             resultsByCategory.measures[result.contestname].push(result);
@@ -118,7 +118,7 @@ module.exports = {
         }
       });
     } else if(selectedCounty === 'Solano') {
-      results.forEach((result) => {
+      results.forEach(function(result) {
         if(result.officename.indexOf('Measure') > -1) {
           if(resultsByCategory.measures[result.officename]) {
             resultsByCategory.measures[result.officename].push(result);
