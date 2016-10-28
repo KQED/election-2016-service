@@ -1,19 +1,4 @@
 module.exports = {
-  removeTags: function(string) {
-    return string.replace('<br />'," ").replace(/\(.*?\)/g, "");
-  },
-
-  formatChoicename: function(string) {
-    return string.replace('BONDS ', '');
-  },
-
-  splitByHyphen: function(string) {
-    return string.split(/\s*\-\s*/g);
-  },
-
-  splitByComma: function(string) {
-    return string.split(', ');
-  },
 
   createContestIdsArray: function(range1, range2, range3, range4) {
     var contestIds = [];
@@ -25,7 +10,7 @@ module.exports = {
     }
     return contestIds;
   },
-
+  
   sortByCategory: function(results, selectedCounty) {
     var resultsByCounty = {};
     var resultsByCategory = {};
@@ -133,11 +118,7 @@ module.exports = {
           }
         }
       });
-
     }
-
-    // console.log('resultsByCategory', resultsByCategory);
-
     return resultsByCategory;
   }
-};
+}

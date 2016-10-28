@@ -1,6 +1,7 @@
 var GoogleSpreadsheet = require('google-spreadsheet'),
     sfgovConfig = require('../utils/sfgovConfig'),
-    helper = require('../utils/helper'),
+    htmlParser = require('../utils/htmlParser'),
+    resultsHelper = require('../utils/resultsHelper'),
     processData = require('../utils/processData');
 
 module.exports = {
@@ -26,14 +27,14 @@ module.exports = {
             delete row._xml;
             delete row.id;
             delete row._links;
-            row.fullname = helper.formatChoicename(row.contestfullname);
+            row.fullname = htmlParser.formatChoicename(row.contestfullname);
             row.precincts = row.processeddone / row.totalprecincts;
             row.votepercent = row.total / row.contesttotal;
             // row.propdescription = sfgovConfig.sfgovDescription[row.contestfullname] ? sfgovConfig.sfgovDescription[row.contestfullname] : '';
             return row;
           //filter to only return rows of desired races
           }).filter(module.exports.filterAlamedaRows);
-          var resultsByCategory = helper.sortByCategory(jsonRows, 'Alameda');
+          var resultsByCategory = resultsHelper.sortByCategory(jsonRows, 'Alameda');
           res.send(resultsByCategory);
         });
       });
@@ -64,13 +65,13 @@ module.exports = {
             delete row._xml;
             delete row.id;
             delete row._links;
-            row.fullname = helper.formatChoicename(row.choicename);
-            row.officename = helper.removeTags(row.contestname);
-            var raceName = helper.splitByComma(row.officename);
+            row.fullname = htmlParser.formatChoicename(row.choicename);
+            row.officename = htmlParser.removeTags(row.contestname);
+            var raceName = htmlParser.splitByComma(row.officename);
             row.officename = raceName[0];
             row.seatname = raceName[1] ? raceName[1] : '';
             if (raceName[0].indexOf('Measure') > -1) {
-              var formattedRace = helper.splitByHyphen(raceName[0]);
+              var formattedRace = htmlParser.splitByHyphen(raceName[0]);
               row.officename = formattedRace[0];
               if(formattedRace[0] === 'Measure O' || formattedRace[0] === 'Measure Y') {
                 row.seatname = formattedRace[1] + '-' + formattedRace[2];
@@ -86,7 +87,7 @@ module.exports = {
             return row;
           //filter to only return rows of desired races
           }).filter(module.exports.filterContraCostaRows);
-          var resultsByCategory = helper.sortByCategory(jsonRows, 'ContraCosta');
+          var resultsByCategory = resultsHelper.sortByCategory(jsonRows, 'ContraCosta');
           res.send(resultsByCategory);
         });
       });
@@ -123,7 +124,7 @@ module.exports = {
             // row.totalvotes = totalVotes[voteKey];
             return row;
           });
-          var resultsByCategory = helper.sortByCategory(jsonRows, 'Marin');
+          var resultsByCategory = resultsHelper.sortByCategory(jsonRows, 'Marin');
           res.send(resultsByCategory);
         });
       });
@@ -157,7 +158,7 @@ module.exports = {
             return row;
           //filter to only return rows of desired races
           }).filter(module.exports.filterSFRows);
-          var resultsByCategory = helper.sortByCategory(jsonRows, 'SanFrancisco');
+          var resultsByCategory = resultsHelper.sortByCategory(jsonRows, 'SanFrancisco');
           res.send(resultsByCategory);
         });
       });
@@ -188,13 +189,13 @@ module.exports = {
             delete row._xml;
             delete row.id;
             delete row._links;
-            row.fullname = helper.formatChoicename(row.choicename);
-            row.officename = helper.removeTags(row.contestname);
-            var raceName = helper.splitByComma(row.officename);
+            row.fullname = htmlParser.formatChoicename(row.choicename);
+            row.officename = htmlParser.removeTags(row.contestname);
+            var raceName = htmlParser.splitByComma(row.officename);
             row.officename = raceName[0];
             row.seatname = raceName[1] ? raceName[1] : '';
             if (raceName[0].indexOf('Measure') > -1) {
-              var formattedRace = helper.splitByHyphen(raceName[0]);
+              var formattedRace = htmlParser.splitByHyphen(raceName[0]);
               row.officename = formattedRace[0];
               if(formattedRace[0] === 'Measure O' || formattedRace[0] === 'Measure Y') {
                 row.seatname = formattedRace[1] + '-' + formattedRace[2];
@@ -210,7 +211,7 @@ module.exports = {
             return row;
           //filter to only return rows of desired races
           }).filter(module.exports.filterSCRows);
-          var resultsByCategory = helper.sortByCategory(jsonRows, 'SantaClara');
+          var resultsByCategory = resultsHelper.sortByCategory(jsonRows, 'SantaClara');
           res.send(resultsByCategory);
         });
       });
@@ -247,7 +248,7 @@ module.exports = {
             row.totalvotes = totalVotes[voteKey];
             return row;
           });
-          var resultsByCategory = helper.sortByCategory(jsonRows, 'Solano');
+          var resultsByCategory = resultsHelper.sortByCategory(jsonRows, 'Solano');
           res.send(resultsByCategory);
         });
       });

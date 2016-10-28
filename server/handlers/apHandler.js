@@ -34,12 +34,11 @@ module.exports = {
             {officename: {$ne: 'Proposition'}},
             {officename: {$ne: 'Measure'}},
             {officename: {$ne: 'President'}},
-            {officename: {$ne: 'U.S. Senate'}},
-            {officename: {$ne: 'U.S. House'}}
+            {officename: {$ne: 'U.S. Senate'}}
         ]
     }};
 
-    module.exports.pullFromAp(req, res, '&officeID=Z&officeID=Y', module.exports.getFromDataBase, query);
+    module.exports.pullFromAp(req, res, '&officeID=H&officeID=Z&officeID=Y', module.exports.getFromDataBase, query);
   
   },
   pullFromAp: function(req, res, endpoint, errcallback, query) {
