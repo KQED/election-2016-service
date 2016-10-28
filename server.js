@@ -56,7 +56,7 @@ app.get('/santaClara', googleHandler.getSantaClara);
 app.get('/solano', googleHandler.getSolano);
 
 app.get('/ap', apHandler.getOtherRaces);
-app.get('/apsenatepres', apHandler.getSenatePres);
+app.get('/apsenatepres', apHandler.getSenateHouse);
 app.get('/approp', apHandler.getProps);
 
 var PORT = process.env.PORT || 8000;

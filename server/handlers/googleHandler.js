@@ -1,5 +1,6 @@
 var GoogleSpreadsheet = require('google-spreadsheet'),
     sfgovConfig = require('../utils/sfgovConfig'),
+    helper = require('../utils/helper'),
     processData = require('../utils/processData');
 
 module.exports = {
@@ -25,13 +26,15 @@ module.exports = {
             delete row._xml;
             delete row.id;
             delete row._links;
+            row.fullname = helper.formatChoicename(row.contestfullname);
             row.precincts = row.processeddone / row.totalprecincts;
             row.votepercent = row.total / row.contesttotal;
             // row.propdescription = sfgovConfig.sfgovDescription[row.contestfullname] ? sfgovConfig.sfgovDescription[row.contestfullname] : '';
             return row;
           //filter to only return rows of desired races
           }).filter(module.exports.filterAlamedaRows);
-          res.send(jsonRows);
+          var resultsByCategory = helper.sortByCategory(jsonRows, 'Alameda');
+          res.send(resultsByCategory);
         });
       });
     });
@@ -61,14 +64,30 @@ module.exports = {
             delete row._xml;
             delete row.id;
             delete row._links;
+            row.fullname = helper.formatChoicename(row.choicename);
+            row.officename = helper.removeTags(row.contestname);
+            var raceName = helper.splitByComma(row.officename);
+            row.officename = raceName[0];
+            row.seatname = raceName[1] ? raceName[1] : '';
+            if (raceName[0].indexOf('Measure') > -1) {
+              var formattedRace = helper.splitByHyphen(raceName[0]);
+              row.officename = formattedRace[0];
+              if(formattedRace[0] === 'Measure O' || formattedRace[0] === 'Measure Y') {
+                row.seatname = formattedRace[1] + '-' + formattedRace[2];
+              } else {
+                row.seatname = formattedRace[1];
+              }
+            }
             //calculate percentage of votes based on total votes
             row.votecount = parseInt(row.totalvotes);
             row.votepercent = row.votecount / totalVotes[voteKey];
             row.precinctsReportingPct = parseInt(row.numprecincttotal)/parseInt(row.numprecinctrptg);
             row.totalvotes = totalVotes[voteKey];
             return row;
-          });
-          res.send(jsonRows);
+          //filter to only return rows of desired races
+          }).filter(module.exports.filterContraCostaRows);
+          var resultsByCategory = helper.sortByCategory(jsonRows, 'ContraCosta');
+          res.send(resultsByCategory);
         });
       });
     });
@@ -104,7 +123,8 @@ module.exports = {
             // row.totalvotes = totalVotes[voteKey];
             return row;
           });
-          res.send(jsonRows);
+          var resultsByCategory = helper.sortByCategory(jsonRows, 'Marin');
+          res.send(resultsByCategory);
         });
       });
     });
@@ -137,7 +157,8 @@ module.exports = {
             return row;
           //filter to only return rows of desired races
           }).filter(module.exports.filterSFRows);
-          res.send(jsonRows);
+          var resultsByCategory = helper.sortByCategory(jsonRows, 'SanFrancisco');
+          res.send(resultsByCategory);
         });
       });
     });
@@ -167,14 +188,30 @@ module.exports = {
             delete row._xml;
             delete row.id;
             delete row._links;
+            row.fullname = helper.formatChoicename(row.choicename);
+            row.officename = helper.removeTags(row.contestname);
+            var raceName = helper.splitByComma(row.officename);
+            row.officename = raceName[0];
+            row.seatname = raceName[1] ? raceName[1] : '';
+            if (raceName[0].indexOf('Measure') > -1) {
+              var formattedRace = helper.splitByHyphen(raceName[0]);
+              row.officename = formattedRace[0];
+              if(formattedRace[0] === 'Measure O' || formattedRace[0] === 'Measure Y') {
+                row.seatname = formattedRace[1] + '-' + formattedRace[2];
+              } else {
+                row.seatname = formattedRace[1];
+              }
+            }
             //calculate percentage of votes based on total votes
             row.votecount = parseInt(row.totalvotes);
             row.votepercent = row.votecount / totalVotes[voteKey];
             row.precinctsReportingPct = parseInt(row.numprecincttotal)/parseInt(row.numprecinctrptg);
             row.totalvotes = totalVotes[voteKey];
             return row;
-          });
-          res.send(jsonRows);
+          //filter to only return rows of desired races
+          }).filter(module.exports.filterSCRows);
+          var resultsByCategory = helper.sortByCategory(jsonRows, 'SantaClara');
+          res.send(resultsByCategory);
         });
       });
     });
@@ -210,7 +247,8 @@ module.exports = {
             row.totalvotes = totalVotes[voteKey];
             return row;
           });
-          res.send(jsonRows);
+          var resultsByCategory = helper.sortByCategory(jsonRows, 'Solano');
+          res.send(resultsByCategory);
         });
       });
     });
@@ -221,8 +259,20 @@ module.exports = {
     }
     return false;
   },
+  filterContraCostaRows: function(item) {
+    if(sfgovConfig.contraCostaContestIds.indexOf(item.linenumber) > -1) {
+      return true;
+    }
+    return false;
+  },
   filterSFRows: function(item) {
     if(sfgovConfig.sfgovContestId.indexOf(item.contestid) > -1) {
+      return true;
+    }
+    return false;
+  },
+  filterSCRows: function(item) {
+    if(sfgovConfig.santaClaraContestIds.indexOf(item.linenumber) > -1) {
       return true;
     }
     return false;
