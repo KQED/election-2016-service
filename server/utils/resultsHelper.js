@@ -10,6 +10,28 @@ module.exports = {
     }
     return contestIds;
   },
+
+  checkRaceDetails: function(raceName) {
+    var raceDetails = {};
+    if(raceName.indexOf('Vote For 1') > -1) {
+      raceDetails.voteFor = '1'; 
+    } else if(raceName.indexOf('Vote For 2') > -1) {
+      raceDetails.voteFor = '2';
+    } else if(raceName.indexOf('Vote For 3') > -1) {
+      raceDetails.voteFor = '3';
+    } else if(raceName.indexOf('Vote For 4') > -1) {
+      raceDetails.voteFor = '4';
+    }
+
+    if(raceName.indexOf('2/3') > -1) {
+      raceDetails.required = '2/3';
+    } else if(raceName.indexOf('55%') > -1) {
+      raceDetails.required = '55%';
+    } else if(raceName.indexOf('Majority') > -1) {
+      raceDetails.required = 'Majority';
+    }
+    return raceDetails;
+  },
   
   sortByCategory: function(results, selectedCounty) {
     var resultsByCounty = {};
