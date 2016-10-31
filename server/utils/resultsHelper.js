@@ -30,6 +30,10 @@ module.exports = {
     } else if(raceName.indexOf('Majority') > -1) {
       raceDetails.required = 'Majority';
     }
+
+    if(raceName.indexOf('(RCV)') > -1) {
+      raceDetails.rcv = true;
+    }
     return raceDetails;
   },
   
@@ -124,7 +128,7 @@ module.exports = {
           }
         }
       });
-    } else if(selectedCounty === 'Solano') {
+    } else {
       results.forEach(function(result) {
         if(result.officename.indexOf('Measure') > -1) {
           if(resultsByCategory.measures[result.officename]) {

@@ -43,6 +43,8 @@ module.exports = {
               row.officename = raceName[0];
               row.seatname = raceName[1] ? raceName[1] : '';             
             }
+            row.seatname = htmlParser.removeTags(row.seatname);
+            row.raceDetails = resultsHelper.checkRaceDetails(row.contestfullname);            
             row.fullname = htmlParser.formatChoicename(row.candidatefullname);
             row.precinctsReportingPct = row.processeddone / row.totalprecincts;
             row.votepercent = row.total / row.contesttotal;
@@ -141,7 +143,45 @@ module.exports = {
             // row.totalvotes = totalVotes[voteKey];
             return row;
           });
-          var resultsByCategory = resultsHelper.sortByCategory(jsonRows, 'Marin');
+          var resultsByCategory = resultsHelper.sortByCategory(jsonRows, null);
+          res.send(resultsByCategory);
+        });
+      });
+    });
+  },
+  getNapa: function(req, res) {
+    var sheet;
+    var doc = new GoogleSpreadsheet(process.env.GOOGLE_DOCS_KEY);
+    doc.getInfo(function(err, info){
+      sheet = info.worksheets[3];
+      sheet.getCells({
+        'min-row': 1,
+        'max-row': 1,
+        'min-col': 2,
+        'max-col': 3,
+        'return-empty': false
+      }, function(err, cells) {
+                
+        sheet.getRows({
+          offset: 1,
+          limit: 175,
+          orderby: 'col2'
+        }, function(err, rows){
+          var totalVotes = processData.calculateGoogleSheetTotalVotes(rows);
+          var jsonRows = rows.map(function(row){
+            var voteKey = processData.hashKey(row.officename, row.seatname);
+            //remove unwanted google doc metadata
+            delete row._xml;
+            delete row.id;
+            delete row._links;
+            //calculate percentage of votes based on total votes
+            row.precinctsReportingPct = parseInt(row.precincts)/100;
+            row.votecount = parseInt(row.votecount);
+            row.votepercent = row.votecount / totalVotes[voteKey];
+            row.totalvotes = totalVotes[voteKey];
+            return row;
+          });
+          var resultsByCategory = resultsHelper.sortByCategory(jsonRows, null);
           res.send(resultsByCategory);
         });
       });
@@ -151,7 +191,7 @@ module.exports = {
     var sheet;
     var doc = new GoogleSpreadsheet(process.env.GOOGLE_DOCS_KEY);
     doc.getInfo(function(err, info){
-      sheet = info.worksheets[3];
+      sheet = info.worksheets[4];
       sheet.getCells({
         'min-row': 1,
         'max-row': 1,
@@ -190,11 +230,65 @@ module.exports = {
       });
     });
   },
+  // getSanMateo: function(req, res) {
+  //   var sheet;
+  //   var doc = new GoogleSpreadsheet(process.env.GOOGLE_DOCS_KEY);
+  //   doc.getInfo(function(err, info){
+  //     sheet = info.worksheets[5];
+  //     sheet.getCells({
+  //       'min-row': 12,
+  //       'max-row': 1,
+  //       'min-col': 2,
+  //       'max-col': 3,
+  //       'return-empty': false
+  //     }, function(err, cells) {
+                
+  //       sheet.getRows({
+  //         offset: 1,
+  //         limit: 375,
+  //         orderby: 'col2'
+  //       }, function(err, rows){
+  //         var totalVotes = processData.calculateGoogleSheetTotalVotes(rows);
+  //         var jsonRows = rows.map(function(row){
+  //           var voteKey = processData.hashKey(row.contestname);
+  //           //remove unwanted google doc metadata
+  //           delete row._xml;
+  //           delete row.id;
+  //           delete row._links;
+  //           row.fullname = htmlParser.formatChoicename(row.choicename);
+  //           row.raceDetails = resultsHelper.checkRaceDetails(row.contestname);
+  //           row.officename = htmlParser.removeTags(row.contestname);
+  //           var raceName = htmlParser.splitByComma(row.officename);
+  //           row.officename = raceName[0];
+  //           row.seatname = raceName[1] ? raceName[1] : '';
+  //           if (raceName[0].indexOf('Measure') > -1) {
+  //             var formattedRace = htmlParser.splitByHyphen(raceName[0]);
+  //             row.officename = formattedRace[0];
+  //             if(formattedRace[0] === 'Measure O' || formattedRace[0] === 'Measure Y') {
+  //               row.seatname = formattedRace[1] + '-' + formattedRace[2];
+  //             } else {
+  //               row.seatname = formattedRace[1];
+  //             }
+  //           }
+  //           //calculate percentage of votes based on total votes
+  //           row.votecount = parseInt(row.totalvotes);
+  //           row.votepercent = row.votecount / totalVotes[voteKey];
+  //           row.precinctsReportingPct = parseInt(row.numprecincttotal)/parseInt(row.numprecinctrptg);
+  //           row.totalvotes = totalVotes[voteKey];
+  //           return row;
+  //         //filter to only return rows of desired races
+  //         }).filter(module.exports.filterSCRows);
+  //         var resultsByCategory = resultsHelper.sortByCategory(jsonRows, 'SantaClara');
+  //         res.send(resultsByCategory);
+  //       });
+  //     });
+  //   });
+  // },
   getSantaClara: function(req, res) {
     var sheet;
     var doc = new GoogleSpreadsheet(process.env.GOOGLE_DOCS_KEY);
     doc.getInfo(function(err, info){
-      sheet = info.worksheets[5];
+      sheet = info.worksheets[6];
       sheet.getCells({
         'min-row': 12,
         'max-row': 1,
@@ -248,7 +342,7 @@ module.exports = {
     var sheet;
     var doc = new GoogleSpreadsheet(process.env.GOOGLE_DOCS_KEY);
     doc.getInfo(function(err, info){
-      sheet = info.worksheets[6];
+      sheet = info.worksheets[7];
       sheet.getCells({
         'min-row': 1,
         'max-row': 1,
@@ -275,8 +369,81 @@ module.exports = {
             row.totalvotes = totalVotes[voteKey];
             return row;
           });
-          var resultsByCategory = resultsHelper.sortByCategory(jsonRows, 'Solano');
+          var resultsByCategory = resultsHelper.sortByCategory(jsonRows, null);
           res.send(resultsByCategory);
+        });
+      });
+    });
+  },
+  getSonoma: function(req, res) {
+    var sheet;
+    var doc = new GoogleSpreadsheet(process.env.GOOGLE_DOCS_KEY);
+    doc.getInfo(function(err, info){
+      sheet = info.worksheets[8];
+      sheet.getCells({
+        'min-row': 1,
+        'max-row': 1,
+        'min-col': 2,
+        'max-col': 3,
+        'return-empty': false
+      }, function(err, cells) {
+                
+        sheet.getRows({
+          offset: 1,
+          limit: 175,
+          orderby: 'col2'
+        }, function(err, rows){
+          var totalVotes = processData.calculateGoogleSheetTotalVotes(rows);
+          var jsonRows = rows.map(function(row){
+            var voteKey = processData.hashKey(row.officename, row.seatname);
+            //remove unwanted google doc metadata
+            delete row._xml;
+            delete row.id;
+            delete row._links;
+            //calculate percentage of votes based on total votes
+            row.votecount = parseInt(row.votecount);
+            row.votepercent = row.votecount / totalVotes[voteKey];
+            row.totalvotes = totalVotes[voteKey];
+            return row;
+          });
+          var resultsByCategory = resultsHelper.sortByCategory(jsonRows, null);
+          res.send(resultsByCategory);
+        });
+      });
+    });
+  },
+  getBart: function(req, res) {
+    var sheet;
+    var doc = new GoogleSpreadsheet(process.env.GOOGLE_DOCS_KEY);
+    doc.getInfo(function(err, info){
+      sheet = info.worksheets[9];
+      sheet.getCells({
+        'min-row': 1,
+        'max-row': 1,
+        'min-col': 2,
+        'max-col': 3,
+        'return-empty': false
+      }, function(err, cells) {
+                
+        sheet.getRows({
+          offset: 1,
+          limit: 25,
+          orderby: 'col2'
+        }, function(err, rows){
+          var totalVotes = processData.calculateGoogleSheetTotalVotes(rows);
+          var jsonRows = rows.map(function(row){
+            var voteKey = processData.hashKey(row.officename, row.seatname);
+            //remove unwanted google doc metadata
+            delete row._xml;
+            delete row.id;
+            delete row._links;
+            //calculate percentage of votes based on total votes
+            row.votecount = parseInt(row.votecount);
+            row.votepercent = row.votecount / totalVotes[voteKey];
+            row.totalvotes = totalVotes[voteKey];
+            return row;
+          });
+          res.send(jsonRows);
         });
       });
     });
