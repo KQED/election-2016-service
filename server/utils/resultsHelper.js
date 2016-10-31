@@ -1,11 +1,17 @@
 module.exports = {
 
-  createContestIdsArray: function(range1, range2, range3, range4) {
+  createContestIdsArray: function(range1, range2, range3, range4, range5, range6, range7, range8) {
     var contestIds = [];
     for(var i = range1; i < range2; i++) {
       contestIds.push(i.toString());
     }
     for(var i = range3; i < range4; i++) {
+      contestIds.push(i.toString());
+    }
+    for(var i = range5; i < range6; i++) {
+      contestIds.push(i.toString());
+    }
+    for(var i = range7; i < range8; i++) {
       contestIds.push(i.toString());
     }
     return contestIds;
