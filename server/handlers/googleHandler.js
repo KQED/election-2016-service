@@ -28,12 +28,20 @@ module.exports = {
             delete row.id;
             delete row._links;
             var raceName = htmlParser.splitByComma(row.contestfullname);
-            row.officename = raceName[0];
-            row.seatname = raceName[1] ? raceName[1] : '';
             if (raceName[0].indexOf('Measure') > -1) {
               var formattedRace = htmlParser.splitByHyphen(raceName[0]);
               row.officename = formattedRace[0];
               row.seatname = formattedRace[1];
+            }
+            if(raceName[1] && raceName[0].indexOf('Member') > -1) {
+              row.officename = raceName[1];
+              row.seatname = raceName[0];
+              if(raceName[2]) {
+                row.seatname = raceName[0] + ', ' + raceName[2];
+              }
+            } else {
+              row.officename = raceName[0];
+              row.seatname = raceName[1] ? raceName[1] : '';             
             }
             row.fullname = htmlParser.formatChoicename(row.candidatefullname);
             row.precinctsReportingPct = row.processeddone / row.totalprecincts;

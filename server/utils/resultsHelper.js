@@ -102,7 +102,7 @@ module.exports = {
         }
       });
     } else if(selectedCounty === 'SantaClara') {
-      resultsByCategory.SanJose = {};
+      resultsByCategory['San Jose'] = {};
       results.forEach(function(result) {
         if(result.contestname.indexOf('Measure') > -1) {
           if(resultsByCategory.measures[result.contestname]) {
@@ -111,10 +111,10 @@ module.exports = {
             resultsByCategory.measures[result.contestname] = [result];
           }
         } else if(result.contestname.indexOf('SAN JOSE') > -1) {
-          if(resultsByCategory.SanJose[result.contestname]) {
-            resultsByCategory.SanJose[result.contestname].push(result);
+          if(resultsByCategory['San Jose'][result.contestname]) {
+            resultsByCategory['San Jose'][result.contestname].push(result);
           } else {
-            resultsByCategory.SanJose[result.contestname] = [result];
+            resultsByCategory['San Jose'][result.contestname] = [result];
           }
         } else {
           if(resultsByCategory.other[result.contestname]) {
