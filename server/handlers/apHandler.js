@@ -11,17 +11,18 @@ module.exports = {
     module.exports.pullFromAp(req, res, '&officeID=I', module.exports.getPropsFromDataBase, null);
   
   },
-  getSenatePres: function(req, res) {    
+  getSenateHouse: function(req, res) {    
     
     var query = { 
       where: {
           $or: [
             {officename: 'President'},
-            {officename: 'U.S. Senate'}
+            {officename: 'U.S. Senate'},
+            {officename: 'U.S. House'}
           ]
       }};    
     
-    module.exports.pullFromAp(req, res, '&officeID=S&officeID=P', module.exports.getFromDataBase, query);
+    module.exports.pullFromAp(req, res, '&officeID=S&officeID=P&officeID=H', module.exports.getFromDataBase, query);
   
   },
   //gets race data from AP API
@@ -37,7 +38,7 @@ module.exports = {
         ]
     }};
 
-    module.exports.pullFromAp(req, res, '&officeID=Z&officeID=H&officeID=Y&officeID=S', module.exports.getFromDataBase, query);
+    module.exports.pullFromAp(req, res, '&officeID=H&officeID=Z&officeID=Y', module.exports.getFromDataBase, query);
   
   },
   pullFromAp: function(req, res, endpoint, errcallback, query) {
