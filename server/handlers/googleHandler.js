@@ -27,8 +27,16 @@ module.exports = {
             delete row._xml;
             delete row.id;
             delete row._links;
+            var raceName = htmlParser.splitByComma(row.contestfullname);
+            row.officename = raceName[0];
+            row.seatname = raceName[1] ? raceName[1] : '';
+            if (raceName[0].indexOf('Measure') > -1) {
+              var formattedRace = htmlParser.splitByHyphen(raceName[0]);
+              row.officename = formattedRace[0];
+              row.seatname = formattedRace[1];
+            }
             row.fullname = htmlParser.formatChoicename(row.candidatefullname);
-            row.precincts = row.processeddone / row.totalprecincts;
+            row.precinctsReportingPct = row.processeddone / row.totalprecincts;
             row.votepercent = row.total / row.contesttotal;
             // row.propdescription = sfgovConfig.sfgovDescription[row.contestfullname] ? sfgovConfig.sfgovDescription[row.contestfullname] : '';
             return row;
@@ -153,8 +161,11 @@ module.exports = {
             delete row._xml;
             delete row.id;
             delete row._links;
+            var raceName = htmlParser.splitByComma(row.contestfullname);
+            row.officename = raceName[0];
+            row.seatname = raceName[1];
             row.fullname = htmlParser.formatChoicename(row.candidatefullname);
-            row.precincts = row.processeddone / row.totalprecincts;
+            row.precinctsReportingPct = row.processeddone / row.totalprecincts;
             row.votepercent = row.total / row.contesttotal;
             // row.propdescription = sfgovConfig.sfgovDescription[row.contestfullname] ? sfgovConfig.sfgovDescription[row.contestfullname] : '';
             return row;
