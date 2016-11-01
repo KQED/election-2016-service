@@ -143,7 +143,8 @@ module.exports = {
             row.votepercent = row.candidatevotepercentage;
             row.precincts = row.numberofprecinctsreporting;
             return row;
-          });
+          //filter to only return rows of desired races
+          }).filter(module.exports.filterMarinRows);
           var resultsByCategory = resultsHelper.sortByCategory(jsonRows, null);
           res.send(resultsByCategory);
         });
@@ -456,8 +457,14 @@ module.exports = {
     }
     return false;
   },
+  filterMarinRows: function(item) {
+    if(sfgovConfig.marinContestIds.indexOf(item.raceid) > -1) {
+      return true;
+    }
+    return false;
+  },
   filterSFRows: function(item) {
-    if(sfgovConfig.sfgovContestId.indexOf(item.contestid) > -1) {
+    if(sfgovConfig.sfgovContestIds.indexOf(item.contestid) > -1) {
       return true;
     }
     return false;
