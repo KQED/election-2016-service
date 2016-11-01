@@ -5,7 +5,7 @@ module.exports = {
 
   formatChoicename: function(string) {
     var uppercase = string.toUpperCase();
-    return uppercase.replace('BONDS ', '').replace('NP - ', '');
+    return uppercase.replace('BONDS ', '').replace('NP - ', '').replace('VOTES', '');
   },
 
   splitByHyphen: function(string) {
