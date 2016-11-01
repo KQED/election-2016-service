@@ -139,9 +139,15 @@ module.exports = {
             var raceName = htmlParser.splitByComma(formattedRace);
             row.officename = raceName[0];
             row.seatname = raceName[1] ? raceName[1] : '';
+            if(raceName[0].indexOf('Measure') > -1) {
+              var formattedMeasure = raceName[0].split(' Measure');
+              row.officename = 'Measure ' + formattedMeasure[1];
+              row.seatname = formattedMeasure[0];
+            }
             row.fullname = htmlParser.formatChoicename(row.candidatename);
-            row.votepercent = row.candidatevotepercentage;
-            row.precincts = row.numberofprecinctsreporting;
+            var votepercent = parseInt(row.candidatevotepercentage.replace('%', ''));
+            row.votepercent = votepercent/100;
+            row.precincts = row.numberofprecinctsreporting.replace('%', '');
             return row;
           //filter to only return rows of desired races
           }).filter(module.exports.filterMarinRows);
