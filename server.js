@@ -50,7 +50,7 @@ app.delete('*', function(req, res) {
 
 app.get('/alameda', googleHandler.getAlameda);
 app.get('/contraCosta', googleHandler.getContraCosta);
-// app.get('/marin', googleHandler.getMarin);
+app.get('/marin', googleHandler.getMarin);
 app.get('/napa', googleHandler.getNapa);
 app.get('/sf', googleHandler.getSfRows);
 // app.get('/sanMateo', googleHandler.getSanMateo);
