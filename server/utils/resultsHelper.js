@@ -1,11 +1,17 @@
 module.exports = {
 
-  createContestIdsArray: function(range1, range2, range3, range4) {
+  createContestIdsArray: function(range1, range2, range3, range4, range5, range6, range7, range8) {
     var contestIds = [];
     for(var i = range1; i < range2; i++) {
       contestIds.push(i.toString());
     }
     for(var i = range3; i < range4; i++) {
+      contestIds.push(i.toString());
+    }
+    for(var i = range5; i < range6; i++) {
+      contestIds.push(i.toString());
+    }
+    for(var i = range7; i < range8; i++) {
       contestIds.push(i.toString());
     }
     return contestIds;
@@ -29,6 +35,10 @@ module.exports = {
       raceDetails.required = '55%';
     } else if(raceName.indexOf('Majority') > -1) {
       raceDetails.required = 'Majority';
+    }
+
+    if(raceName.indexOf('(RCV)') > -1) {
+      raceDetails.rcv = true;
     }
     return raceDetails;
   },
@@ -124,7 +134,7 @@ module.exports = {
           }
         }
       });
-    } else if(selectedCounty === 'Solano') {
+    } else {
       results.forEach(function(result) {
         if(result.officename.indexOf('Measure') > -1) {
           if(resultsByCategory.measures[result.officename]) {

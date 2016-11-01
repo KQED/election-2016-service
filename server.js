@@ -50,10 +50,16 @@ app.delete('*', function(req, res) {
 
 app.get('/alameda', googleHandler.getAlameda);
 app.get('/contraCosta', googleHandler.getContraCosta);
-app.get('/marin', googleHandler.getMarin);
+// app.get('/marin', googleHandler.getMarin);
+app.get('/napa', googleHandler.getNapa);
 app.get('/sf', googleHandler.getSfRows);
+// app.get('/sanMateo', googleHandler.getSanMateo);
 app.get('/santaClara', googleHandler.getSantaClara);
 app.get('/solano', googleHandler.getSolano);
+// app.get('/sonoma', googleHandler.getSonoma);
+app.get('/bart', googleHandler.getBart);
+
+
 
 app.get('/ap', apHandler.getOtherRaces);
 app.get('/apsenatepres', apHandler.getSenateHouse);
