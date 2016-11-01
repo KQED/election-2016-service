@@ -359,17 +359,13 @@ module.exports = {
           limit: 175,
           orderby: 'col2'
         }, function(err, rows){
-          var totalVotes = processData.calculateGoogleSheetTotalVotes(rows);
           var jsonRows = rows.map(function(row){
-            var voteKey = processData.hashKey(row.officename, row.seatname);
             //remove unwanted google doc metadata
             delete row._xml;
             delete row.id;
             delete row._links;
             //calculate percentage of votes based on total votes
-            row.votecount = parseInt(row.votecount);
-            row.votepercent = row.votecount / totalVotes[voteKey];
-            row.totalvotes = totalVotes[voteKey];
+            row.votepercent = parseInt(row.votepercent)/100;
             return row;
           });
           var resultsByCategory = resultsHelper.sortByCategory(jsonRows, null);
