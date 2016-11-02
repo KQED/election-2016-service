@@ -45,7 +45,7 @@ module.exports = {
             row.seatname = htmlParser.removeTags(row.seatname);
             row.raceDetails = resultsHelper.checkRaceDetails(row.contestfullname);            
             row.fullname = htmlParser.formatChoicename(row.candidatefullname);
-            row.precinctsReportingPct = row.processeddone / row.totalprecincts;
+            row.precincts = row.processeddone / row.totalprecincts;
             row.votepercent = row.total / row.contesttotal;
             // row.propdescription = sfgovConfig.sfgovDescription[row.contestfullname] ? sfgovConfig.sfgovDescription[row.contestfullname] : '';
             return row;
@@ -72,7 +72,7 @@ module.exports = {
                 
         sheet.getRows({
           offset: 1,
-          limit: 400,
+          limit: 450,
           orderby: 'col2'
         }, function(err, rows){
           var totalVotes = processData.calculateGoogleSheetTotalVotes(rows);
@@ -100,7 +100,7 @@ module.exports = {
             //calculate percentage of votes based on total votes
             row.votecount = parseInt(row.totalvotes);
             row.votepercent = row.votecount / totalVotes[voteKey];
-            row.precinctsReportingPct = parseInt(row.numprecincttotal)/parseInt(row.numprecinctrptg);
+            row.precincts = parseInt(row.numprecinctrptg)/parseInt(row.numprecincttotal);
             row.totalvotes = totalVotes[voteKey];
             return row;
           //filter to only return rows of desired races
@@ -172,7 +172,7 @@ module.exports = {
                 
         sheet.getRows({
           offset: 1,
-          limit: 175,
+          limit: 100,
           orderby: 'col2'
         }, function(err, rows){
           var jsonRows = rows.map(function(row){
@@ -181,7 +181,7 @@ module.exports = {
             delete row.id;
             delete row._links;
             //calculate percentage of votes based on total votes
-            row.votepercent = row.votePct;
+            row.votepercent = parseFloat(row.votepct);
             return row;
           });
           var resultsByCategory = resultsHelper.sortByCategory(jsonRows, null);
@@ -205,7 +205,7 @@ module.exports = {
                 
         sheet.getRows({
           offset: 1,
-          limit: 300,
+          limit: 200,
           orderby: 'col1'
         }, function(err, rows){
           var jsonRows = rows.map(function(row){
@@ -221,7 +221,7 @@ module.exports = {
               row.seatname = raceName[1] ? raceName[1] : '';              
             }
             row.fullname = htmlParser.formatChoicename(row.candidatefullname);
-            row.precinctsReportingPct = row.processeddone / row.totalprecincts;
+            row.precincts = row.processeddone / row.totalprecincts;
             row.votepercent = row.total / row.contesttotal;
             // row.propdescription = sfgovConfig.sfgovDescription[row.contestfullname] ? sfgovConfig.sfgovDescription[row.contestfullname] : '';
             return row;
@@ -276,7 +276,7 @@ module.exports = {
             //calculate percentage of votes based on total votes
             row.votecount = parseInt(row.totalvotes);
             row.votepercent = row.votecount / totalVotes[voteKey];
-            row.precinctsReportingPct = parseInt(row.numprecincttotal)/parseInt(row.numprecinctrptg);
+            row.precincts = parseInt(row.numprecinctrptg)/parseInt(row.numprecincttotal);
             row.totalvotes = totalVotes[voteKey];
             return row;
           //filter to only return rows of desired races
@@ -302,7 +302,7 @@ module.exports = {
                 
         sheet.getRows({
           offset: 1,
-          limit: 375,
+          limit: 400,
           orderby: 'col2'
         }, function(err, rows){
           var totalVotes = processData.calculateGoogleSheetTotalVotes(rows);
@@ -330,7 +330,7 @@ module.exports = {
             //calculate percentage of votes based on total votes
             row.votecount = parseInt(row.totalvotes);
             row.votepercent = row.votecount / totalVotes[voteKey];
-            row.precinctsReportingPct = parseInt(row.numprecincttotal)/parseInt(row.numprecinctrptg);
+            row.precincts = parseInt(row.numprecinctrptg)/parseInt(row.numprecincttotal);
             row.totalvotes = totalVotes[voteKey];
             return row;
           //filter to only return rows of desired races
@@ -356,7 +356,7 @@ module.exports = {
                 
         sheet.getRows({
           offset: 1,
-          limit: 175,
+          limit: 200,
           orderby: 'col2'
         }, function(err, rows){
           var jsonRows = rows.map(function(row){
@@ -389,22 +389,27 @@ module.exports = {
                 
         sheet.getRows({
           offset: 1,
-          limit: 175,
+          limit: 300,
           orderby: 'col2'
         }, function(err, rows){
-          var totalVotes = processData.calculateGoogleSheetTotalVotes(rows);
           var jsonRows = rows.map(function(row){
-            var voteKey = processData.hashKey(row.officename, row.seatname);
             //remove unwanted google doc metadata
             delete row._xml;
             delete row.id;
             delete row._links;
-            //calculate percentage of votes based on total votes
-            row.votecount = parseInt(row.votecount);
-            row.votepercent = row.votecount / totalVotes[voteKey];
-            row.totalvotes = totalVotes[voteKey];
+            var precinctsPct = parseFloat(row.precinctsreporting)*100;
+            row.precincts = precinctsPct.toString();
+            row.raceDetails = resultsHelper.checkRaceDetails(row.racetitlecleaner);
+            var raceName = htmlParser.splitByHyphenSpace(row.racetitlecleaner);
+            row.officename = raceName[0];
+            row.seatname = raceName[1];
+            row.fullname = htmlParser.formatChoicename(row.candidatename);
+            //convert votepercent from string into decimal number
+            var votepercent = parseInt(row.votepercentage.replace('%', ''));
+            row.votepercent = votepercent/100;
             return row;
-          });
+          //filter to only return rows of desired races
+          }).filter(module.exports.filterSonomaRows);
           var resultsByCategory = resultsHelper.sortByCategory(jsonRows, null);
           res.send(resultsByCategory);
         });
@@ -426,7 +431,7 @@ module.exports = {
                 
         sheet.getRows({
           offset: 1,
-          limit: 25,
+          limit: 50,
           orderby: 'col2'
         }, function(err, rows){
           var totalVotes = processData.calculateGoogleSheetTotalVotes(rows);
@@ -473,6 +478,12 @@ module.exports = {
   },
   filterSCRows: function(item) {
     if(sfgovConfig.santaClaraContestIds.indexOf(item.linenumber) > -1) {
+      return true;
+    }
+    return false;
+  },
+  filterSonomaRows: function(item) {
+    if(sfgovConfig.sonomaContestIds.indexOf(item.raceid) > -1) {
       return true;
     }
     return false;
