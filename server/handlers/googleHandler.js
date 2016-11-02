@@ -99,7 +99,7 @@ module.exports = {
             }
             //calculate percentage of votes based on total votes
             row.votecount = parseInt(row.totalvotes);
-            row.votepercent = row.votecount / totalVotes[voteKey];
+            row.votepercent = row.percentofvotes;
             row.precincts = parseInt(row.numprecinctrptg)/parseInt(row.numprecincttotal);
             row.totalvotes = totalVotes[voteKey];
             return row;
@@ -145,8 +145,7 @@ module.exports = {
               row.seatname = formattedMeasure[0];
             }
             row.fullname = htmlParser.formatChoicename(row.candidatename);
-            var votepercent = parseInt(row.candidatevotepercentage.replace('%', ''));
-            row.votepercent = votepercent/100;
+            row.votepercent = row.candidatevotepercentage.replace('%', '');
             row.precincts = row.numberofprecinctsreporting.replace('%', '');
             return row;
           //filter to only return rows of desired races
@@ -305,9 +304,7 @@ module.exports = {
           limit: 400,
           orderby: 'col2'
         }, function(err, rows){
-          var totalVotes = processData.calculateGoogleSheetTotalVotes(rows);
           var jsonRows = rows.map(function(row){
-            var voteKey = processData.hashKey(row.contestname);
             //remove unwanted google doc metadata
             delete row._xml;
             delete row.id;
@@ -328,10 +325,8 @@ module.exports = {
               }
             }
             //calculate percentage of votes based on total votes
-            row.votecount = parseInt(row.totalvotes);
-            row.votepercent = row.votecount / totalVotes[voteKey];
+            row.votepercent = row.percentofvotes;
             row.precincts = parseInt(row.numprecinctrptg)/parseInt(row.numprecincttotal);
-            row.totalvotes = totalVotes[voteKey];
             return row;
           //filter to only return rows of desired races
           }).filter(module.exports.filterSCRows);
@@ -403,6 +398,11 @@ module.exports = {
             var raceName = htmlParser.splitByHyphenSpace(row.racetitlecleaner);
             row.officename = raceName[0];
             row.seatname = raceName[1];
+            if(row.racetitlecleaner.indexOf('Member,') > -1) {
+              raceName = htmlParser.splitByComma(row.racetitlecleaner);
+              row.officename = raceName[1];
+              row.seatname = raceName[0];
+            }
             row.fullname = htmlParser.formatChoicename(row.candidatename);
             //convert votepercent from string into decimal number
             var votepercent = parseInt(row.votepercentage.replace('%', ''));
