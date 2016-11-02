@@ -330,7 +330,7 @@ module.exports = {
             //calculate percentage of votes based on total votes
             row.votecount = parseInt(row.totalvotes);
             row.votepercent = row.votecount / totalVotes[voteKey];
-            row.precincts = parseInt(row.numprecincttotal)/parseInt(row.numprecinctrptg);
+            row.precincts = parseInt(row.numprecinctrptg)/parseInt(row.numprecincttotal);
             row.totalvotes = totalVotes[voteKey];
             return row;
           //filter to only return rows of desired races
