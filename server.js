@@ -56,7 +56,7 @@ app.get('/sf', googleHandler.getSfRows);
 // app.get('/sanMateo', googleHandler.getSanMateo);
 app.get('/santaClara', googleHandler.getSantaClara);
 app.get('/solano', googleHandler.getSolano);
-// app.get('/sonoma', googleHandler.getSonoma);
+app.get('/sonoma', googleHandler.getSonoma);
 app.get('/bart', googleHandler.getBart);
 
 

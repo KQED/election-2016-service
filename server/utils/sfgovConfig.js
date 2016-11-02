@@ -7,6 +7,7 @@ module.exports = {
   contraCostaContestIds: resultsHelper.createContestIdsArray(31, 293, 306, 309, 343, 345, 347, 395),
   marinContestIds: resultsHelper.createContestIdsArray(6, 14, 31, 42),
   santaClaraContestIds: resultsHelper.createContestIdsArray(34, 260, 294, 358),
+  sonomaContestIds: resultsHelper.createContestIdsArray(8, 38, 55, 78),
   sfgovDescription: {
     "Local Measure A": "Public health and safety bond",
     "Local Measure B": "Park, rec and open space fund",
