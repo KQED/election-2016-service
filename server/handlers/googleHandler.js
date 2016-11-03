@@ -42,6 +42,7 @@ module.exports = {
                 row.seatname = raceName[0] + ', ' + raceName[2];
               }
             }
+            row.registrar = 'http://www.acgov.org/rov/current_election/';
             row.seatname = htmlParser.removeTags(row.seatname);
             row.raceDetails = resultsHelper.checkRaceDetails(row.contestfullname);            
             row.fullname = htmlParser.formatChoicename(row.candidatefullname);
@@ -75,13 +76,12 @@ module.exports = {
           limit: 450,
           orderby: 'col2'
         }, function(err, rows){
-          var totalVotes = processData.calculateGoogleSheetTotalVotes(rows);
           var jsonRows = rows.map(function(row){
-            var voteKey = processData.hashKey(row.contestname);
             //remove unwanted google doc metadata
             delete row._xml;
             delete row.id;
             delete row._links;
+            row.registrar = 'http://results.enr.clarityelections.com/CA/Contra_Costa/64177/Web02/#/';
             row.fullname = htmlParser.formatChoicename(row.choicename);
             row.raceDetails = resultsHelper.checkRaceDetails(row.contestname);            
             row.officename = htmlParser.removeTags(row.contestname);
@@ -98,10 +98,8 @@ module.exports = {
               }
             }
             //calculate percentage of votes based on total votes
-            row.votecount = parseInt(row.totalvotes);
             row.votepercent = row.percentofvotes;
             row.precincts = parseInt(row.numprecinctrptg)/parseInt(row.numprecincttotal);
-            row.totalvotes = totalVotes[voteKey];
             return row;
           //filter to only return rows of desired races
           }).filter(module.exports.filterContraCostaRows);
@@ -134,6 +132,7 @@ module.exports = {
             delete row._xml;
             delete row.id;
             delete row._links;
+            row.registrar = 'http://www.marincounty.org/depts/rv/election-info/results';
             row.raceDetails = resultsHelper.checkRaceDetails(row.officename);   
             var formattedRace = htmlParser.removeTags(row.officename);
             var raceName = htmlParser.splitByComma(formattedRace);
@@ -179,8 +178,9 @@ module.exports = {
             delete row._xml;
             delete row.id;
             delete row._links;
+            row.registrar = 'http://www.countyofnapa.org/electionresults/';
             //calculate percentage of votes based on total votes
-            row.votepercent = parseFloat(row.votepct);
+            row.votepercent = row.votepct;
             return row;
           });
           var resultsByCategory = resultsHelper.sortByCategory(jsonRows, null);
@@ -211,6 +211,7 @@ module.exports = {
             delete row._xml;
             delete row.id;
             delete row._links;
+            row.registrar = 'http://www.sfelections.org/results/20161108/';
             var raceName = htmlParser.splitByComma(row.contestfullname);
             if(raceName[0].indexOf('Member') > -1) {
               row.officename = raceName[1];
@@ -247,40 +248,34 @@ module.exports = {
                 
         sheet.getRows({
           offset: 1,
-          limit: 375,
+          limit: 200,
           orderby: 'col2'
         }, function(err, rows){
-          var totalVotes = processData.calculateGoogleSheetTotalVotes(rows);
           var jsonRows = rows.map(function(row){
-            var voteKey = processData.hashKey(row.contestname);
             //remove unwanted google doc metadata
             delete row._xml;
             delete row.id;
             delete row._links;
-            row.fullname = htmlParser.formatChoicename(row.choicename);
-            row.raceDetails = resultsHelper.checkRaceDetails(row.contestname);
-            row.officename = htmlParser.removeTags(row.contestname);
-            var raceName = htmlParser.splitByComma(row.officename);
+            row.registrar = 'https://www.shapethefuture.org/elections/results/2016/nov/web/';
+            row.fullname = htmlParser.formatChoicename(row.candidatename);
+            row.raceDetails = resultsHelper.checkRaceDetails(row.officename);
+            var formattedRace = htmlParser.removeTags(row.officename);
+            var raceName = htmlParser.splitByComma(formattedRace);
             row.officename = raceName[0];
             row.seatname = raceName[1] ? raceName[1] : '';
-            if (raceName[0].indexOf('Measure') > -1) {
-              var formattedRace = htmlParser.splitByHyphen(raceName[0]);
-              row.officename = formattedRace[0];
-              if(formattedRace[0] === 'Measure O' || formattedRace[0] === 'Measure Y') {
-                row.seatname = formattedRace[1] + '-' + formattedRace[2];
-              } else {
-                row.seatname = formattedRace[1];
-              }
+            if(raceName[0].indexOf('MEASURE') > -1) {
+              var formattedMeasure = raceName[0].split(' MEASURE');
+              row.officename = 'Measure ' + formattedMeasure[1];
+              row.seatname = formattedMeasure[0];
             }
             //calculate percentage of votes based on total votes
-            row.votecount = parseInt(row.totalvotes);
-            row.votepercent = row.votecount / totalVotes[voteKey];
-            row.precincts = parseInt(row.numprecinctrptg)/parseInt(row.numprecincttotal);
-            row.totalvotes = totalVotes[voteKey];
+            row.votepercent = row.candidatevotepercentage.replace('%', '');
+            var precinctsPct = parseFloat(row.numberofprecinctsreporting)*100;
+            row.precincts = precinctsPct.toString();            
             return row;
           //filter to only return rows of desired races
-          }).filter(module.exports.filterSCRows);
-          var resultsByCategory = resultsHelper.sortByCategory(jsonRows, 'SantaClara');
+          }).filter(module.exports.filterSMRows);
+          var resultsByCategory = resultsHelper.sortByCategory(jsonRows, null);
           res.send(resultsByCategory);
         });
       });
@@ -309,6 +304,7 @@ module.exports = {
             delete row._xml;
             delete row.id;
             delete row._links;
+            row.registrar = 'http://results.enr.clarityelections.com/CA/Santa_Clara/64404/178468/Web01/en/summary.html';
             row.fullname = htmlParser.formatChoicename(row.choicename);
             row.raceDetails = resultsHelper.checkRaceDetails(row.contestname);
             row.officename = htmlParser.removeTags(row.contestname);
@@ -359,8 +355,9 @@ module.exports = {
             delete row._xml;
             delete row.id;
             delete row._links;
+            row.registrar = 'http://solano.ca.electionconsole.com/';
             //calculate percentage of votes based on total votes
-            row.votepercent = parseInt(row.votepercent)/100;
+            row.votepercent = row.votepercent;
             return row;
           });
           var resultsByCategory = resultsHelper.sortByCategory(jsonRows, null);
@@ -392,6 +389,7 @@ module.exports = {
             delete row._xml;
             delete row.id;
             delete row._links;
+            row.registrar = 'http://vote.sonoma-county.org/content.aspx?sid=1009&id=2456';
             var precinctsPct = parseFloat(row.precinctsreporting)*100;
             row.precincts = precinctsPct.toString();
             row.raceDetails = resultsHelper.checkRaceDetails(row.racetitlecleaner);
@@ -405,8 +403,7 @@ module.exports = {
             }
             row.fullname = htmlParser.formatChoicename(row.candidatename);
             //convert votepercent from string into decimal number
-            var votepercent = parseInt(row.votepercentage.replace('%', ''));
-            row.votepercent = votepercent/100;
+            var votepercent = row.votepercentage.replace('%', '');
             return row;
           //filter to only return rows of desired races
           }).filter(module.exports.filterSonomaRows);
@@ -472,6 +469,12 @@ module.exports = {
   },
   filterSFRows: function(item) {
     if(sfgovConfig.sfgovContestIds.indexOf(item.contestid) > -1) {
+      return true;
+    }
+    return false;
+  },
+  filterSMRows: function(item) {
+    if(sfgovConfig.sanMateoContestIds.indexOf(item.raceid) > -1) {
       return true;
     }
     return false;
