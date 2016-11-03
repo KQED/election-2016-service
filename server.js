@@ -53,7 +53,7 @@ app.get('/contraCosta', googleHandler.getContraCosta);
 app.get('/marin', googleHandler.getMarin);
 app.get('/napa', googleHandler.getNapa);
 app.get('/sf', googleHandler.getSfRows);
-// app.get('/sanMateo', googleHandler.getSanMateo);
+app.get('/sanMateo', googleHandler.getSanMateo);
 app.get('/santaClara', googleHandler.getSantaClara);
 app.get('/solano', googleHandler.getSolano);
 app.get('/sonoma', googleHandler.getSonoma);
