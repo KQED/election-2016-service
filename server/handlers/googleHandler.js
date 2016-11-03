@@ -270,7 +270,8 @@ module.exports = {
             }
             //calculate percentage of votes based on total votes
             row.votepercent = row.candidatevotepercentage.replace('%', '');
-            row.precincts = row.numberofprecinctsreporting;
+            var precinctsPct = parseFloat(row.numberofprecinctsreporting)*100;
+            row.precincts = precinctsPct.toString();            
             return row;
           //filter to only return rows of desired races
           }).filter(module.exports.filterSMRows);
