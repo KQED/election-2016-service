@@ -19,27 +19,45 @@ module.exports = {
 
   checkRaceDetails: function(raceName) {
     var raceDetails = null;
-    // if(raceName.indexOf('Vote For 1') > -1) {
-    //   raceDetails.voteFor = '1'; 
-    // } else if(raceName.indexOf('Vote For 2') > -1) {
-    //   raceDetails.voteFor = '2';
-    // } else if(raceName.indexOf('Vote For 3') > -1) {
-    //   raceDetails.voteFor = '3';
-    // } else if(raceName.indexOf('Vote For 4') > -1) {
-    //   raceDetails.voteFor = '4';
-    // }
 
     if(raceName.indexOf('2/3') > -1) {
-      raceDetails = '2/3';
+      raceDetails = 'Passage requires two-thirds of the vote.';
     } else if(raceName.indexOf('55%') > -1) {
-      raceDetails = '55%';
-    } else if(raceName.indexOf('Majority') > -1) {
-      raceDetails = 'Majority';
+      raceDetails = 'Passage requires 55 percent of the vote.';
+    } else if(raceName.indexOf('Majority') > -1 || raceName.indexOf('majority') > -1) {
+      raceDetails = 'Passage requires a majority of the vote.';
+    } 
+
+    return raceDetails;
+  },
+
+  assignRaceThresholds: function(raceId, county) {
+    var twoThirdsIds;
+    var fiftyFiveIds;
+    var majorityIds;
+    var raceDetails = null;
+    if(county === 'Alameda') {
+      twoThirdsIds = ['102', '103', '104', '105', '114', '118', '135', '141', '142', '143', '144'];
+      fiftyFiveIds = ['106', '107', '108'];
+      majorityIds = ['109', '110', '111', '112', '113', '115', '116', '117', '119', '120', '121', '122', '123', '124', '125', '126', '127', '128', '129', '130', '131', '132', '133', '134', '136', '137', '138', '139', '140'];
+    } else if(county === 'SF') {
+      twoThirdsIds = ['38', '39', '55', '61'];
+      fiftyFiveIds = ['37'];
+      majorityIds = ['40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '56', '57', '58', '59', '60'];
+    } else if(county === 'SC') {
+      twoThirdsIds = ['294', '295', '296', '297', '342', '343', '348', '349', '352', '353', '354', '355', '356', '357'];
+      fiftyFiveIds = ['340', '341', '350', '351'];
+      majorityIds = ['298', '299', '300', '301', '302', '303', '304', '305', '306', '307', '308', '309', '310', '311', '312', '313', '314', '315', '316', '317', '318', '319', '320', '321', '322', '323', '324', '325', '326', '327', '328', '329', '330', '331', '332', '333', '334', '335', '336', '337', '338', '339'];
     }
 
-    // if(raceName.indexOf('(RCV)') > -1) {
-    //   raceDetails.rcv = true;
-    // }
+    if(twoThirdsIds.indexOf(raceId) > -1) {
+      raceDetails = 'Passage requires two-thirds of the vote.';
+    } else if(fiftyFiveIds.indexOf(raceId) > -1) {
+      raceDetails = 'Passage requires 55 percent of the vote.';
+    } else if(majorityIds.indexOf(raceId) > -1) {
+      raceDetails = 'Passage requires a majority of the vote.';
+    }
+
     return raceDetails;
   },
   

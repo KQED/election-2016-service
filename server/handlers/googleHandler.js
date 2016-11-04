@@ -42,13 +42,12 @@ module.exports = {
                 row.seatname = raceName[0] + ', ' + raceName[2];
               }
             }
+            row.raceDetails = resultsHelper.assignRaceThresholds(row.contestid, 'Alameda');
             row.registrar = 'http://www.acgov.org/rov/current_election/';
             row.seatname = htmlParser.removeTags(row.seatname);
-            row.raceDetails = resultsHelper.checkRaceDetails(row.contestfullname);            
             row.fullname = htmlParser.formatChoicename(row.candidatefullname);
             row.precincts = row.processeddone / row.totalprecincts;
             row.votepercent = row.total / row.contesttotal;
-            // row.propdescription = sfgovConfig.sfgovDescription[row.contestfullname] ? sfgovConfig.sfgovDescription[row.contestfullname] : '';
             return row;
           //filter to only return rows of desired races
           }).filter(module.exports.filterAlamedaRows);
@@ -178,6 +177,7 @@ module.exports = {
             delete row._xml;
             delete row.id;
             delete row._links;
+            row.raceDetails = resultsHelper.checkRaceDetails(row.threshold);
             row.registrar = 'http://www.countyofnapa.org/electionresults/';
             //calculate percentage of votes based on total votes
             row.votepercent = row.votepct;
@@ -221,6 +221,7 @@ module.exports = {
               row.seatname = raceName[1] ? raceName[1] : '';              
             }
             row.fullname = htmlParser.formatChoicename(row.candidatefullname);
+            row.raceDetails = resultsHelper.assignRaceThresholds(row.contestid, 'SF');
             row.precincts = row.processeddone / row.totalprecincts;
             row.votepercent = row.total / row.contesttotal;
             // row.propdescription = sfgovConfig.sfgovDescription[row.contestfullname] ? sfgovConfig.sfgovDescription[row.contestfullname] : '';
@@ -306,7 +307,7 @@ module.exports = {
             delete row._links;
             row.registrar = 'http://results.enr.clarityelections.com/CA/Santa_Clara/64404/178468/Web01/en/summary.html';
             row.fullname = htmlParser.formatChoicename(row.choicename);
-            row.raceDetails = resultsHelper.checkRaceDetails(row.contestname);
+            row.raceDetails = resultsHelper.assignRaceThresholds(row.linenumber, 'SC');
             row.officename = htmlParser.removeTags(row.contestname);
             var raceName = htmlParser.splitByComma(row.officename);
             row.officename = raceName[0];
@@ -355,6 +356,7 @@ module.exports = {
             delete row._xml;
             delete row.id;
             delete row._links;
+            row.raceDetails = resultsHelper.checkRaceDetails(row.threshold);
             row.registrar = 'http://solano.ca.electionconsole.com/';
             //calculate percentage of votes based on total votes
             row.votepercent = row.votepercent;
@@ -393,7 +395,8 @@ module.exports = {
             var precinctsPct = parseFloat(row.precinctsreporting)*100;
             row.precincts = precinctsPct.toString();
             row.raceDetails = resultsHelper.checkRaceDetails(row.racetitlecleaner);
-            var raceName = htmlParser.splitByHyphenSpace(row.racetitlecleaner);
+            var formattedRace = htmlParser.removeTags(row.racetitlecleaner);
+            var raceName = htmlParser.splitByHyphenSpace(formattedRace);
             row.officename = raceName[0];
             row.seatname = raceName[1];
             if(row.racetitlecleaner.indexOf('Member,') > -1) {
@@ -438,6 +441,9 @@ module.exports = {
             delete row._xml;
             delete row.id;
             delete row._links;
+            if(row.officename === 'Measure RR') {
+              row.raceDetails = 'Passage requires two-thirds of the vote.';
+            }
             //calculate percentage of votes based on total votes
             row.votecount = parseInt(row.votecount);
             row.votepercent = row.votecount / totalVotes[voteKey];
