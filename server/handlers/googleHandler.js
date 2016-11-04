@@ -394,7 +394,7 @@ module.exports = {
             row.registrar = 'http://vote.sonoma-county.org/content.aspx?sid=1009&id=2456';
             var precinctsPct = parseFloat(row.precinctsreporting)*100;
             row.precincts = precinctsPct.toString();
-            row.raceDetails = resultsHelper.checkRaceDetails(row.racetitlecleaner);
+            row.raceDetails = resultsHelper.assignRaceThresholds(row.raceid, 'Sonoma');
             var formattedRace = htmlParser.removeTags(row.racetitlecleaner);
             var raceName = htmlParser.splitByHyphenSpace(formattedRace);
             row.officename = raceName[0];
