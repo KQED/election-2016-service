@@ -1,6 +1,6 @@
 module.exports = {
   removeTags: function(string) {
-    return string.replace('<br />'," ").replace(/\(.*?\)/g, "");
+    return string.replace('<br />'," ").replace(/\(.*?\)/g, "").replace('55% BOND', '');
   },
 
   formatChoicename: function(string) {
