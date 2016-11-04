@@ -64,9 +64,10 @@ module.exports = {
   },
   //filter for only desired AP races
   raceFilter: {
-    "U.S. House": ["District 2", "District 3", "District 5", "District 11",
-    "District 12", "District 13", "District 14", "District 15", "District 17",
-    "District 18", "District 19", "District 20"],
+    "U.S. House": ["District 2", "District 3", "District 5", "District 7",
+    "District 10", "District 11", "District 12", "District 13", "District 14",
+    "District 15", "District 17", "District 18", "District 19", "District 20",
+    "District 21", "District 24", "District 25", "District 49"],
     "State Senate": ["District 3", "District 7", "District 9", "District 11",
     "District 13", "District 15", "District 17"],
     "State Assembly": ["District 2", "District 4", "District 10", "District 11", 
