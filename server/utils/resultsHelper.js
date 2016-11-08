@@ -142,7 +142,7 @@ module.exports = {
           } else {
             resultsByCategory.measures[result.contestname] = [result];
           }
-        } else if(result.contestname.indexOf('SAN JOSE') > -1) {
+        } else if(result.contestname.indexOf('SAN JOSE') > -1 || result.contestname.indexOf('San Jose') > -1) {
           if(resultsByCategory['San Jose'][result.contestname]) {
             resultsByCategory['San Jose'][result.contestname].push(result);
           } else {
