@@ -156,6 +156,22 @@ module.exports = {
           }
         }
       });
+    } else if(selectedCounty === 'Napa') {
+      results.forEach(function(result) {
+        if(result.fullofficename.indexOf('Measure') > -1) {
+          if(resultsByCategory.measures[result.fullofficename]) {
+            resultsByCategory.measures[result.fullofficename].push(result);
+          } else {
+            resultsByCategory.measures[result.fullofficename] = [result];
+          }
+        } else {
+          if(resultsByCategory.other[result.fullofficename]) {
+            resultsByCategory.other[result.fullofficename].push(result);
+          } else {
+            resultsByCategory.other[result.fullofficename] = [result];
+          }
+        }
+      });
     } else {
       results.forEach(function(result) {
         if(result.officename.indexOf('Measure') > -1) {
