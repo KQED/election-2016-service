@@ -1,4 +1,3 @@
-var htmlParser = require('../utils/htmlParser');
 module.exports = {
 
   createContestIdsArray: function(range1, range2, range3, range4, range5, range6, range7, range8) {
