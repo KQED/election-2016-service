@@ -1,3 +1,4 @@
+var htmlParser = require('../utils/htmlParser');
 module.exports = {
 
   createContestIdsArray: function(range1, range2, range3, range4, range5, range6, range7, range8) {
@@ -153,6 +154,22 @@ module.exports = {
             resultsByCategory.other[result.contestname].push(result);
           } else {
             resultsByCategory.other[result.contestname] = [result];
+          }
+        }
+      });
+    } else if(selectedCounty === 'Napa') {
+      results.forEach(function(result) {
+        if(result.fullofficename.indexOf('Measure') > -1) {
+          if(resultsByCategory.measures[result.fullofficename]) {
+            resultsByCategory.measures[result.fullofficename].push(result);
+          } else {
+            resultsByCategory.measures[result.fullofficename] = [result];
+          }
+        } else {
+          if(resultsByCategory.other[result.fullofficename]) {
+            resultsByCategory.other[result.fullofficename].push(result);
+          } else {
+            resultsByCategory.other[result.fullofficename] = [result];
           }
         }
       });

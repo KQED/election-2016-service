@@ -183,7 +183,7 @@ module.exports = {
             row.votepercent = row.votepct;
             return row;
           });
-          var resultsByCategory = resultsHelper.sortByCategory(jsonRows, null);
+          var resultsByCategory = resultsHelper.sortByCategory(jsonRows, 'Napa');
           res.send(resultsByCategory);
         });
       });
