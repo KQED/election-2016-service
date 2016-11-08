@@ -358,8 +358,6 @@ module.exports = {
             delete row._links;
             row.raceDetails = resultsHelper.checkRaceDetails(row.threshold);
             row.registrar = 'http://solano.ca.electionconsole.com/';
-            //calculate percentage of votes based on total votes
-            row.votepercent = row.votepercent;
             return row;
           });
           var resultsByCategory = resultsHelper.sortByCategory(jsonRows, 'Napa');
@@ -406,7 +404,7 @@ module.exports = {
             }
             row.fullname = htmlParser.formatChoicename(row.candidatename);
             //convert votepercent from string into decimal number
-            var votepercent = row.votepercentage.replace('%', '');
+            row.votepercent = row.votepercentage.replace('%', '');
             return row;
           //filter to only return rows of desired races
           }).filter(module.exports.filterSonomaRows);
